@@ -9,22 +9,27 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     >
-    {% block title %}
-    {% endblock %}
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
 
     {% block extra_css %}
     {% endblock %}
 
 </head>
 <body>
-
+    <main class="container">
     {% block breadcrumb %}
     {% endblock %}
 
     {% block content %}
     {% endblock %}
+    
+    </main>
 
     {% block extra_scripts %}
     {% endblock %}
+
 </body>
 </html>

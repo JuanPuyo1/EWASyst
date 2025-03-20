@@ -6,7 +6,7 @@ from .forms import LoginForm
 
 class LoginModifiedView(View):
     form_class = LoginForm
-    template_name = 'login.html'
+    template_name = 'accounts/login.html'
     def get(self, request):
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
