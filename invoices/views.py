@@ -4,5 +4,3 @@ from django.views import View
 class InvoicesListView(View):
     def get(self, request):
         return render(request, 'invoices/invoices_list.html')
-
-
