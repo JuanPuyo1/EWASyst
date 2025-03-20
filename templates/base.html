@@ -19,6 +19,32 @@
 
 </head>
 <body>
+    {% if user.is_authenticated %}
+    <header class="container">
+        <nav>
+            <ul>
+              <li><strong>EWA JOYERIA</strong></li>
+            </ul>
+            <ul>
+              <li><a href="#" class="contrast">Inicio</a></li>
+              <li><a href="#" class="contrast">Clientes</a></li>
+              <li><a href="#" class="contrast">Inventarios</a></li>
+              <li><a href="#" class="contrast">Facturas</a></li>
+              <li>
+                <details class="dropdown">
+                  <summary>
+                    Cuenta
+                  </summary>
+                  <ul dir="rtl">
+                    <li><a href="#">Perfil</a></li>
+                    <li><a href="{% url 'accounts:logout' %}">Cerrar sesión</a></li>
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </nav>
+    </header>
+    {% endif %}
     <main class="container">
     {% block breadcrumb %}
     {% endblock %}
