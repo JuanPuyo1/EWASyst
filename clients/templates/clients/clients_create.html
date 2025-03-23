@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Anadir Cliente
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+      <li><a href="{% url 'clients:clients_list' %}">Clientes</a></li>
+      <li>Anadir Cliente</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>Anadir Cliente</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock %}

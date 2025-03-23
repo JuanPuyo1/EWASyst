@@ -1,7 +1,51 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<h1>Clients List</h1>
 
-z{% endblock %}
+
+{% block title %}
+    Lista de Clientes
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+      <li>Clientes</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>Lista de Clientes</h1>
+
+<button class="btn btn-primary" onclick="window.location.href='{% url 'clients:clients_create' %}'">
+    Anadir Cliente
+</button>
+
+<table class="overflow-auto">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.name }}</td>
+                <td>{{ client.phone }}</td>
+                <td>{{ client.email }}</td>
+                <td>
+                    <a href="">View</a>
+                    <a href="">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
 
