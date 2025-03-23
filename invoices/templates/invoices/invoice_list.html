@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+Facturas
+{% endblock %}
+
+{% block content %}
+<h1>Facturas</h1>
+
+
+<table>
+    <thead data-theme="dark">
+        <tr>
+            <th>Número</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Tipo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.invoice_number }}</td>
+                <td>{{ invoice.client.name }}</td>
+                <td>{{ invoice.invoice_date }}</td>
+                
+                <td>{{ invoice.total }}</td>
+                <td>{{ invoice.invoice_type }}</td>
+                <td>
+                    <a href="">Ver</a>
+                    <a href="">Editar</a>
+                    <a href="">Eliminar</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    
+  </table>
+
+{% endblock %}
