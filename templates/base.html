@@ -27,9 +27,18 @@
             </ul>
             <ul>
               <li><a href="#" class="contrast">Inicio</a></li>
-              <li><a href="{% url 'clients:clients_list' %}" class="contrast">Clientes</a></li>
-              <li><a href="#" class="contrast">Inventarios</a></li>
-              <li><a href="#" class="contrast">Facturas</a></li>
+              <li>
+                <details class="dropdown">
+                  <summary>
+                    Administracion
+                  </summary>
+                  <ul dir="rtl">
+                    <li><a href="{% url 'clients:clients_list' %}" class="contrast">Clientes</a></li>
+                    <li><a href="#" class="contrast">Inventarios</a></li>
+                    <li><a href="#" class="contrast">Facturas</a></li>
+                  </ul>
+                </details>
+              </li>
               <li>
                 <details class="dropdown">
                   <summary>
@@ -55,6 +64,7 @@
     </main>
 
     {% block extra_scripts %}
+    
     {% endblock %}
 
 </body>
