@@ -4,58 +4,78 @@ from clients.models import Client
 class JewelleryItem(models.Model):
     jewellery_name = models.CharField(max_length=100)
     jewellery_quantity = models.IntegerField()
-    jewellery_price = models.DecimalField(max_digits=10, decimal_places=2)
-    jewellery_total = models.DecimalField(max_digits=10, decimal_places=2)
+    certificate = models.BooleanField(default=False)
+
+
     def __str__(self):
         return self.jewellery_name
 
-class InvoiceForItem(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    invoice_number = models.CharField(max_length=100)
-    invoice_type = models.CharField(max_length=100)
-    invoice_date = models.DateField()
-    invoice_status = models.CharField(max_length=100)
+
+class Stone(models.Model):
+    stone_name = models.CharField(max_length=100)
+    stone_color = models.CharField(max_length=100)
+    stone_clarity = models.CharField(max_length=100)
+    stone_carat = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.stone_name
+
+class Invoice(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, null=True, blank=True)
+    invoice_number = models.CharField(max_length=100, null=True, blank=True)
+    invoice_type = models.CharField(max_length=100, null=True, blank=True)
+    invoice_date = models.DateField(null=True, blank=True)
+    invoice_status = models.CharField(max_length=100, null=True, blank=True)
+    observation = models.TextField(null=True, blank=True)
+    invoice_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    invoice_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    client_signature = models.ImageField(upload_to='uploads/client_signatures/', null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
-    items = models.ManyToManyField(JewelleryItem)    
+
+    class Meta:
+        abstract = True 
+
     def __str__(self):
         return self.invoice_number
 
-class InvoiceForMaintenance(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    invoice_number = models.CharField(max_length=100)
-    invoice_date = models.DateField()
-    invoice_status = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
+class InvoiceForItem(Invoice):
+    
+    items = models.ManyToManyField(JewelleryItem, blank=True)        
+
+    def __str__(self):
+        return self.invoice_number
+
+class InvoiceForMaintenance(Invoice):
     description = models.TextField()
     def __str__(self):
         return self.invoice_number
 
-class Diamond(JewelleryItem):
-    diamond_name = models.CharField(max_length=100)
-    diamond_shape = models.CharField(max_length=100)
-    diamond_color = models.CharField(max_length=100)
-    diamond_clarity = models.CharField(max_length=100)
-    diamond_carat = models.DecimalField(max_digits=10, decimal_places=2)
-    diamond_price = models.DecimalField(max_digits=10, decimal_places=2)
-    diamond_total = models.DecimalField(max_digits=10, decimal_places=2)
+
+class InvoiceForStone(Invoice):
+    stone = models.ForeignKey(Stone, on_delete=models.DO_NOTHING, null=True, blank=True)
     def __str__(self):
-        return self.diamond_name
+        return self.invoice_number
+
 
 class Ring(JewelleryItem):
-    ring_name = models.CharField(max_length=100)
     ring_size = models.CharField(max_length=100)
-    ring_price = models.DecimalField(max_digits=10, decimal_places=2)
-    ring_total = models.DecimalField(max_digits=10, decimal_places=2)
     ring_type = models.CharField(max_length=100)
+    ring_quality = models.CharField(max_length=100)
+    ring_weight = models.DecimalField(max_digits=10, decimal_places=2)
+    stone = models.ForeignKey(Stone, on_delete=models.DO_NOTHING, null=True, blank=True)
+    synthetic_stone = models.BooleanField(default=False)
     def __str__(self):
-        return self.ring_name
+        return self.ring_type
 
-class Emerald(JewelleryItem):
-    emerald_name = models.CharField(max_length=100)
-    emerald_color = models.CharField(max_length=100)
-    emerald_clarity = models.CharField(max_length=100)
-    emerald_carat = models.DecimalField(max_digits=10, decimal_places=2)
-    emerald_price = models.DecimalField(max_digits=10, decimal_places=2)
-    emerald_total = models.DecimalField(max_digits=10, decimal_places=2)
+
+class ChainOrBracelet(JewelleryItem):
+    chain_or_bracelet_weight = models.DecimalField(max_digits=10, decimal_places=2)
+    chain_or_bracelet_quality = models.CharField(max_length=100)
+    long = models.DecimalField(max_digits=10, decimal_places=2)
+    fabric = models.CharField(max_length=100)
     def __str__(self):
-        return self.emerald_name
+        return self.chain_or_bracelet_quality
+
+

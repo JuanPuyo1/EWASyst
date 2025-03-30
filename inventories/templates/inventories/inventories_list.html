@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Inventario EWA</title>
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+      <li>Inventarios</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>Inventarios</h1>
+<button onclick="window.location.href='{% url 'inventories:inventories_create' %}'">Crear Inventario</button>
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for inventory in inventories %}
+        <tr>
+            <td>{{ inventory.name }}</td>
+            <td>{{ inventory.description }}</td>
+            <td>{{ inventory.price }}</td>
+            <td>{{ inventory.stock }}</td>
+            <td>
+                <button onclick="window.location.href='{% url 'inventories:inventories_update' inventory.id %}'">Editar</button>
+                <button onclick="window.location.href='{% url 'inventories:inventories_delete' inventory.id %}'">Eliminar</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

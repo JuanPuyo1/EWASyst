@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Actualizar Inventario</title>
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+      <li><a href="{% url 'inventories:inventories_list' %}">Inventarios</a></li>
+      <li>Actualizar Inventario</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>Actualizar Inventario</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Actualizar</button>
+</form>
+{% endblock %}
