@@ -18,11 +18,15 @@
 {% block content %}
 <h1>Lista de Clientes</h1>
 
+{% include 'includes/search_by_name.html' %}
+
 <button class="btn btn-primary" onclick="window.location.href='{% url 'clients:clients_create' %}'">
     Anadir Cliente
 </button>
+
+
 <div class="overflow-auto">
-<table>
+<table id="myTable">
     <thead>
         <tr>
             <th>Nombre</th>
@@ -80,5 +84,6 @@
 
 {% block extra_scripts %}
 <script src="{% static 'js/modal.js' %}"></script>
+
 {% endblock extra_scripts %}
 
