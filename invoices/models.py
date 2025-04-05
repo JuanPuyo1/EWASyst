@@ -38,25 +38,25 @@ class Invoice(models.Model):
         abstract = True 
 
     def __str__(self):
-        return self.invoice_number
+        return self.pk
 
 class InvoiceForItem(Invoice):
     
-    items = models.ManyToManyField(JewelleryItem, blank=True)        
+    items = models.ManyToManyField(JewelleryItem, related_name='items', blank=True)        
 
     def __str__(self):
-        return self.invoice_number
+        return f"Factura de Item {self.pk}"
 
 class InvoiceForMaintenance(Invoice):
     description = models.TextField()
     def __str__(self):
-        return self.invoice_number
+        return f"Factura de Mantenimiento {self.pk}"
 
 
 class InvoiceForStone(Invoice):
     stone = models.ForeignKey(Stone, on_delete=models.DO_NOTHING, null=True, blank=True)
     def __str__(self):
-        return self.invoice_number
+        return f"Factura de Piedra {self.pk}"
 
 
 class Ring(JewelleryItem):

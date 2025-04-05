@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Crear Factura por Item</title>
+{% endblock %}
+
+{% block content %}
+<h1>Crear Factura por Item</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Crear</button>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function() {
+        $('#id_items').select2({
+            placeholder: 'Seleccionar items',
+            allowClear: true,
+            width: '100%',
+        });
+    });
+</script>
+{% endblock %}

@@ -7,9 +7,11 @@ Facturas
 {% block content %}
 <h1>Facturas</h1>
 
+<button onclick="window.location.href='{% url 'invoices:invoices_create_list' %}'">Crear Factura</button>
 
+<div class="overflow-auto">
 <table>
-    <thead data-theme="dark">
+    <thead>
         <tr>
             <th>Número</th>
             <th>Cliente</th>
@@ -38,5 +40,5 @@ Facturas
     </tbody>
     
   </table>
-
+</div>
 {% endblock %}

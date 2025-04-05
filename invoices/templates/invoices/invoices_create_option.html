@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Crear Factura</title>
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+      <li>Opciones de Creación de Factura</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>Opciones de Creación de Factura</h1>
+<a href="{% url 'invoices:invoices_create_for_item' %}">Crear Factura por Item</a>
+{% endblock %}

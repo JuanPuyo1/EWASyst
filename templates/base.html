@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +10,17 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     >
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Select2 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+
     <title>
         {% block title %}
         {% endblock %}
@@ -23,7 +35,7 @@
     <header class="container">
         <nav>
             <ul>
-              <li><strong>EWA JOYERIA</strong></li>
+              <li class="logo"><strong>EWA JOYERIA</strong></li>
             </ul>
             <ul>
               <li><a href="#" class="contrast">Inicio</a></li>
@@ -35,7 +47,7 @@
                   <ul dir="rtl">
                     <li><a href="{% url 'clients:clients_list' %}" class="contrast">Clientes</a></li>
                     <li><a href="{% url 'inventories:inventories_list' %}" class="contrast">Inventarios</a></li>
-                    <li><a href="#" class="contrast">Facturas</a></li>
+                    <li><a href="{% url 'invoices:invoices_list' %}" class="contrast">Facturas</a></li>
                   </ul>
                 </details>
               </li>
@@ -67,5 +79,8 @@
     
     {% endblock %}
 
+   
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>
 </html>

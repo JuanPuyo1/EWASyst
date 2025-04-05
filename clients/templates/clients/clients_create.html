@@ -9,13 +9,13 @@
     <ul>
        <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
       <li><a href="{% url 'clients:clients_list' %}">Clientes</a></li>
-      <li>Anadir Cliente</li>
+      <li>Crear Cliente</li>
     </ul>
   </nav>
 {% endblock %}
 
 {% block content %}
-<h1>Anadir Cliente</h1>
+<h1>Crear Cliente</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
