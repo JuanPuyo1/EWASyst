@@ -1,0 +1,127 @@
+from django.shortcuts import render
+from .models import Quote
+from .forms import QuoteForm
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+#Generar PDF
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+import os
+from django.conf import settings
+from reportlab.lib.utils import simpleSplit
+
+# Create your views here.
+class QuoteView(ListView):
+    model = Quote
+    template_name = 'quote_list.html'
+    context_object_name = 'quotes'
+
+class QuoteCreateView(CreateView):
+    model = Quote
+    form_class = QuoteForm
+    template_name = 'quotes/quote_create.html'
+    success_url = reverse_lazy('quotes:quote_list')
+
+class QuoteUpdateView(UpdateView):
+    model = Quote
+    form_class = QuoteForm
+    template_name = 'quotes/quote_create.html'
+    success_url = reverse_lazy('quotes:quote_list')
+
+class QuoteDeleteView(DeleteView):
+    model = Quote
+    template_name = 'quotes/quote_confirm_delete.html'
+    success_url = reverse_lazy('quotes:quote_list')
+
+def generate_pdf(request, quote_id):
+    BASE_DIR = settings.BASE_DIR
+    # Create buffer and canvas
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer)
+    
+    # Get quote data
+    quote = Quote.objects.get(id=quote_id)
+    
+    # Set font
+    p.setFont("Helvetica", 10)
+    
+    # Draw logo
+    logo_path = os.path.join(BASE_DIR, 'quotes', 'static', 'quotes', 'logo.png')
+    p.drawImage(logo_path, 250, 700, width=100, height=100)
+    
+    # Draw company name
+    p.setFont("Helvetica", 14)
+    p.drawString(250, 680, "EWA JOYERÍA")
+    
+    # Customer details section (left side)
+    p.setFont("Helvetica", 10)
+    p.drawString(50, 600, "EMITIDO A:")
+    p.drawString(50, 580, f"{quote.client.name}")
+    p.drawString(50, 560, f"{quote.client.email}")
+    p.drawString(50, 540, f"{quote.client.phone}")
+    
+    # Quote details (right side)
+    p.drawString(450, 600, "COTIZACIÓN")
+    p.drawString(450, 580, f"FECHA: {quote.quote_date.strftime('%d.%m.%Y')}")
+    p.drawString(450, 560, f"ID: {quote.quote_number}")
+    
+    # Table headers
+    y_position = 480
+    p.setFillColorRGB(0.9, 0.9, 0.9)  # Light gray background
+    p.rect(50, y_position, 500, 20, fill=True)
+    p.setFillColorRGB(0, 0, 0)  # Back to black text
+    p.drawString(60, y_position + 5, "DESCRIPCIÓN")
+    p.drawString(300, y_position + 5, "VALOR")
+    p.drawString(400, y_position + 5, "QTY")
+    p.drawString(480, y_position + 5, "TOTAL")
+    
+    # Quote content
+    y_position -= 30
+    # Split description into lines that fit within 220 points width
+    description_lines = simpleSplit(quote.quote_description, p._fontname, p._fontsize, 220)
+    
+    # Draw each line of the description
+    for line in description_lines:
+        p.drawString(60, y_position, line)
+        y_position -= 15  # Move down 15 points for next line
+    
+    # Reset y_position to the highest line for other columns
+    y_position += (len(description_lines) - 1) * 15  # Move back up
+    
+    # Draw other columns
+    p.drawString(300, y_position, f"COP {quote.quote_total:,.0f}")
+    p.drawString(400, y_position, "1")
+    p.drawString(480, y_position, f"COP {quote.quote_total:,.0f}")
+    
+    # Adjust y_position for next section
+    y_position -= max(30, len(description_lines) * 15)  # Use the larger of standard spacing or text height
+    
+    # ... rest of the code ...
+    p.setFillColorRGB(0.9, 0.9, 0.9)
+    p.rect(50, y_position, 500, 20, fill=True)
+    p.setFillColorRGB(0, 0, 0)
+    p.drawString(400, y_position + 5, "TOTAL")
+    p.drawString(480, y_position + 5, f"COP {quote.quote_total:,.0f}")
+    
+    # Notes section
+    y_position -= 40
+    p.drawString(50, y_position, "Notas:")
+    p.drawString(50, y_position - 20, quote.quote_details)
+    
+    # Footer
+    p.drawString(50, 100, "DETALLES")
+    p.drawString(450, 100, "GRACIAS")
+    
+    # Close the PDF object
+    p.showPage()
+    p.save()
+    
+    # FileResponse
+    buffer.seek(0)
+
+    response = FileResponse(buffer, content_type="application/pdf")
+    response["Content-Disposition"] = "inline; filename={}".format(f"cotizacion_{quote.id}.pdf")
+    return response

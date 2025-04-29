@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Quote List
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+      <li><a href="{% url 'quotes:quote_list' %}">Cotizaciones</a></li>
+      <li>Listado de Cotizaciones</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+
+{% block content %}
+
+<h1>Lista de Cotizaciones</h1>
+
+{% include 'includes/search.html' %}
+
+<button onclick="window.location.href='{% url 'quotes:quote_create' %}'" class="btn btn-primary">Crear Cotización</button>
+
+<div class="overflow-auto" >
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>Número de Cotización</th>
+            <th>Fecha de Cotización</th>
+            <th>Cliente</th>
+            <th>Total de Cotización</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for quote in quotes %}
+        <tr>
+            <td>{{ quote.quote_number }}</td>
+            <td>{{ quote.quote_date }}</td>
+            <td>{{ quote.client.name }}</td>
+            <td>{{ quote.quote_total }}</td>
+            <td>
+                <ul>
+                    <li><a href="{% url 'quotes:generate_pdf' quote.id %}" class="btn btn-primary" target="_blank">Generar PDF</a></li>
+                    <li><a href="{% url 'quotes:quote_update' quote.id %}" class="btn btn-primary">Editar</a></li>
+                    <li><a href="{% url 'quotes:quote_delete' quote.id %}" class="btn btn-danger">Eliminar</a></li>
+                </ul>
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

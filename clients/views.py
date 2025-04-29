@@ -15,11 +15,12 @@ class ClientsListView(ListView):
     context_object_name = 'clients'
 
 class ClientsCreateView(View):
-    def get(self, request):
+    def get(self, request, flag):
+
         form = ClientForm()
         return render(request, 'clients/clients_create.html', {'form': form})
 
-    def post(self, request):
+    def post(self, request, flag):
         form = ClientForm(request.POST)
         if form.is_valid():
             form.save()

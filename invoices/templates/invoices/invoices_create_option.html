@@ -15,5 +15,7 @@
 
 {% block content %}
 <h1>Opciones de Creación de Factura</h1>
-<a href="{% url 'invoices:invoices_create_for_item' %}">Crear Factura por Item</a>
+<a href="{% url 'invoices:invoices_create' %}">Crear Factura para Joya a Medida</a>
+<a href="{% url 'invoices:invoices_create_for_item' %}">Crear Factura para Item</a>
+<a href="{% url 'invoices:invoices_create_for_stone' %}">Crear Factura para Piedra</a>
 {% endblock %}
