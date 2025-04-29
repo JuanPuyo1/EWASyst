@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import QuoteView, QuoteCreateView, QuoteUpdateView, QuoteDeleteView, generate_pdf
+from .views import QuoteView, QuoteCreateView, QuoteUpdateView, QuoteDeleteView, generate_pdf, create_invoice
 
 app_name = 'quotes'
 
@@ -9,5 +9,6 @@ urlpatterns = [
     path('update/<int:pk>/', QuoteUpdateView.as_view(), name='quote_update'),
     path('delete/<int:pk>/', QuoteDeleteView.as_view(), name='quote_delete'),
     path('generate_pdf/<int:quote_id>/', generate_pdf, name='generate_pdf'),
+    path('create_invoice/<int:quote_id>/', create_invoice, name='create_invoice'),
 ]
 

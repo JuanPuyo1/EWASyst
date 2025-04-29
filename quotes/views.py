@@ -4,6 +4,9 @@ from .forms import QuoteForm
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from invoices.models import InvoiceForItem
+from invoices.forms import InvoiceForItemForm
+from django.shortcuts import redirect
 
 #Generar PDF
 import io
@@ -12,8 +15,8 @@ from reportlab.pdfgen import canvas
 import os
 from django.conf import settings
 from reportlab.lib.utils import simpleSplit
-
 # Create your views here.
+
 class QuoteView(ListView):
     model = Quote
     template_name = 'quote_list.html'
@@ -125,3 +128,15 @@ def generate_pdf(request, quote_id):
     response = FileResponse(buffer, content_type="application/pdf")
     response["Content-Disposition"] = "inline; filename={}".format(f"cotizacion_{quote.id}.pdf")
     return response
+
+def create_invoice(request, quote_id):
+    quote = Quote.objects.get(id=quote_id)
+    
+    request.session['invoice_initial_data'] = {
+        'client': quote.client.id,  # Store ID instead of object
+        'invoice_number': quote.quote_number,
+        'invoice_total': str(quote.quote_total),  # Convert Decimal to string
+        'invoice_details': quote.quote_details,
+        'observation': quote.quote_details,
+    }
+    return redirect('invoices:invoices_create_for_item')

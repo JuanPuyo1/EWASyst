@@ -44,6 +44,7 @@
             <td>
                 <ul>
                     <li><a href="{% url 'quotes:generate_pdf' quote.id %}" class="btn btn-primary" target="_blank">Generar PDF</a></li>
+                    <li><a href="{% url 'quotes:create_invoice' quote.id %}" class="btn btn-primary" target="_blank">Crear Factura</a></li>
                     <li><a href="{% url 'quotes:quote_update' quote.id %}" class="btn btn-primary">Editar</a></li>
                     <li><a href="{% url 'quotes:quote_delete' quote.id %}" class="btn btn-danger">Eliminar</a></li>
                 </ul>

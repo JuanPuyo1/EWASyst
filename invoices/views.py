@@ -20,12 +20,18 @@ class InvoicesCreateListView(View):
 
 class InvoicesCreateForItemView(View):
     def get(self, request):
-        form = InvoiceForItemForm()
+
+        initial_data = request.session.pop('invoice_initial_data', None)
+        if initial_data:
+            form = InvoiceForItemForm(initial=initial_data)
+        else:
+            form = InvoiceForItemForm()
         items = JewelleryItem.objects.all()
         context = {
             'form': form,
             'items': items
         }
+        request.session['invoice_initial_data'] = None
         return render(request, 'invoices/invoices_create.html', context)
 
     def post(self, request):
@@ -33,6 +39,4 @@ class InvoicesCreateForItemView(View):
         if form.is_valid():
             form.save()
             return redirect('invoices:invoices_list')
-
-
 
