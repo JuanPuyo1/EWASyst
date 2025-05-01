@@ -1,24 +1,6 @@
 from django.db import models
 from clients.models import Client
-
-class JewelleryItem(models.Model):
-    jewellery_name = models.CharField(max_length=100)
-    jewellery_quantity = models.IntegerField()
-    certificate = models.BooleanField(default=False)
-
-
-    def __str__(self):
-        return self.jewellery_name
-
-
-class Stone(models.Model):
-    stone_name = models.CharField(max_length=100)
-    stone_color = models.CharField(max_length=100)
-    stone_clarity = models.CharField(max_length=100)
-    stone_carat = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return self.stone_name
+from products.models import JewelleryItem, Stone
 
 class Invoice(models.Model):
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -44,7 +26,7 @@ class InvoiceForItem(Invoice):
     
     items = models.ManyToManyField(JewelleryItem, related_name='items', blank=True)        
 
-    
+
     def __str__(self):
         return f"Factura de Item {self.pk}"
 
@@ -60,23 +42,5 @@ class InvoiceForStone(Invoice):
         return f"Factura de Piedra {self.pk}"
 
 
-class Ring(JewelleryItem):
-    ring_size = models.CharField(max_length=100)
-    ring_type = models.CharField(max_length=100)
-    ring_quality = models.CharField(max_length=100)
-    ring_weight = models.DecimalField(max_digits=10, decimal_places=2)
-    stone = models.ForeignKey(Stone, on_delete=models.DO_NOTHING, null=True, blank=True)
-    synthetic_stone = models.BooleanField(default=False)
-    def __str__(self):
-        return self.ring_type
-
-
-class ChainOrBracelet(JewelleryItem):
-    chain_or_bracelet_weight = models.DecimalField(max_digits=10, decimal_places=2)
-    chain_or_bracelet_quality = models.CharField(max_length=100)
-    long = models.DecimalField(max_digits=10, decimal_places=2)
-    fabric = models.CharField(max_length=100)
-    def __str__(self):
-        return self.chain_or_bracelet_quality
 
 

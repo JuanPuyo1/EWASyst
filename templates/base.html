@@ -38,7 +38,7 @@
               <li class="logo"><img src="{% static 'img/logo.png' %}" onclick="window.location.href='{% url 'dashboard:dashboard' %}'" alt="EWA joyeria Logo" style="width: 100px; height: 100px;"></li>
             </ul>
             <ul>
-              <li><a href="#" class="contrast">Inicio</a></li>
+              <li><a href="{% url 'dashboard:dashboard' %}" class="contrast">Inicio</a></li>
               <li>
                 <details class="dropdown">
                   <summary>
@@ -48,6 +48,7 @@
                     <li><a href="{% url 'clients:clients_list' %}" class="contrast">Clientes</a></li>
                     <li><a href="{% url 'invoices:invoices_list' %}" class="contrast">Facturas</a></li>
                     <li><a href="{% url 'quotes:quote_list' %}" class="contrast">Cotizaciones</a></li>
+                    <li><a href="{% url 'products:products_list' %}" class="contrast">Productos</a></li>
                     <li><a href="{% url 'inventories:inventories_list' %}" class="contrast">Inventarios</a></li>
                   </ul>
                 </details>

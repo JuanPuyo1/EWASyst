@@ -28,4 +28,5 @@ urlpatterns = [
     path('inventories/', include('inventories.urls')),
     path('invoices/', include('invoices.urls')),
     path('quotes/', include('quotes.urls')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('products/', include('products.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
