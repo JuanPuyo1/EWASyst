@@ -8,3 +8,14 @@ h1{
 
     font-family: 'Cormorant', serif;
 }
+h3{
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Cormorant', serif;
+}
+
+button{
+    background-color: #927c3f;
+    color: white;
+    border: none;
+}

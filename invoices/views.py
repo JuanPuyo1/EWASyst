@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import InvoiceForItem, InvoiceForMaintenance, JewelleryItem
+from .models import Invoice, InvoiceForItem, InvoiceForMaintenance, JewelleryItem
 from .forms import InvoiceForItemForm
 # Create your views here.
 
@@ -39,4 +39,18 @@ class InvoicesCreateForItemView(View):
         if form.is_valid():
             form.save()
             return redirect('invoices:invoices_list')
+
+def invoices_delete(request, pk):
+    invoice = get_object_or_404(InvoiceForItem, pk=pk)
+    if invoice:
+        invoice.delete()
+    else:
+        invoice = get_object_or_404(InvoiceForMaintenance, pk=pk)
+        if invoice:
+            invoice.delete()
+        else:
+            return redirect('invoices:invoices_list')
+    return redirect('invoices:invoices_list')
+
+
 

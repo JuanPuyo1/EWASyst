@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 
 {% block title %}
 Facturas
@@ -33,12 +35,51 @@ Facturas
                 <td>
                     <a href="">Ver</a>
                     <a href="">Editar</a>
-                    <a href="">Eliminar</a>
+                    <a data-target="modal-example" onclick="toggleModal(event)">Eliminar</a>
                 </td>
             </tr>
+
+
+
+            <dialog id="modal-example">
+                <article>
+                  <header>
+                    <button
+                      aria-label="Close"
+                      rel="prev"
+                      data-target="modal-example"
+                      onclick="toggleModal(event)"
+                    ></button>
+                    <h3>¿Está seguro de eliminar esta factura?</h3>
+                  </header>
+                  <p>
+                    Esta factura sera eliminada permanentemente.
+                  </p>
+                  <footer>
+                    <button
+                      role="button"
+                      class="secondary"
+                      data-target="modal-example"
+                      onclick="toggleModal(event)"
+                    >
+                      Cancelar
+                    </button>
+                    <button autofocus onclick="window.location.href='{% url 'invoices:invoices_delete' invoice.id %}'">
+                      Confirmar
+                    </button>
+                  </footer>
+                </article>
+              </dialog>
         {% endfor %}
     </tbody>
     
   </table>
 </div>
+
+
 {% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/modal.js' %}"></script>
+
+{% endblock extra_scripts %}

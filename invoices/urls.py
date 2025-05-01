@@ -7,5 +7,6 @@ urlpatterns = [
     path('invoices_list/', views.InvoicesListView.as_view(), name='invoices_list'),
     path('invoices_create_list/', views.InvoicesCreateListView.as_view(), name='invoices_create_list'),
     path('invoices_create_for_item/', views.InvoicesCreateForItemView.as_view(), name='invoices_create_for_item'),
+    path('invoices_delete/<int:pk>/', views.invoices_delete, name='invoices_delete'),
 ]
 
