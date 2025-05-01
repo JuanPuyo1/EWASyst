@@ -30,6 +30,7 @@
             <th>Número de Cotización</th>
             <th>Fecha de Cotización</th>
             <th>Cliente</th>
+            <th>Tipo de Producto</th>
             <th>Total de Cotización</th>
             <th>Acciones</th>
         </tr>
@@ -40,6 +41,7 @@
             <td>{{ quote.quote_number }}</td>
             <td>{{ quote.quote_date }}</td>
             <td>{{ quote.client.name }}</td>
+            <td>{{ quote.quote_product_type }}</td>
             <td>{{ quote.quote_total }}</td>
             <td>
                 <ul>

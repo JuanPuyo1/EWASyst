@@ -112,11 +112,28 @@ def generate_pdf(request, quote_id):
     # Notes section
     y_position -= 40
     p.drawString(50, y_position, "Notas:")
-    p.drawString(50, y_position - 20, quote.quote_details)
+    p.drawString(50, y_position - 20, quote.quote_additional_notes)
     
     # Footer
-    p.drawString(50, 100, "DETALLES")
-    p.drawString(450, 100, "GRACIAS")
+    y_position = 150  # Adjust this value as needed
+    
+    # DETALLES section (left side)
+    p.drawString(50, y_position, "DETALLES")
+    p.drawString(50, y_position - 20, "EWA joyería solicita el 60% de la")
+    p.drawString(50, y_position - 35, "cotización para iniciar.")
+    p.drawString(50, y_position - 50, "Métodos de pago:")
+    p.drawString(50, y_position - 65, "Daviplata-Nequi: 3105458202")
+    p.drawString(50, y_position - 80, "Cuenta de Ahorros Davivienda:")
+    p.drawString(50, y_position - 95, "457900065071")
+    p.drawString(50, y_position - 110, "Para más información puede")
+    p.drawString(50, y_position - 125, "contactarnos aquí")
+    
+    # GRACIAS and signature (right side)
+    p.drawString(450, y_position, "GRACIAS")
+    
+    # Draw signature
+    sign_path = os.path.join(BASE_DIR, 'quotes', 'static', 'quotes', 'sign.jpg')
+    p.drawImage(sign_path, 400, y_position - 100, width=150, height=80)  # Adjust width/height as needed
     
     # Close the PDF object
     p.showPage()
@@ -136,7 +153,15 @@ def create_invoice(request, quote_id):
         'client': quote.client.id,  # Store ID instead of object
         'invoice_number': quote.quote_number,
         'invoice_total': str(quote.quote_total),  # Convert Decimal to string
-        'invoice_details': quote.quote_details,
-        'observation': quote.quote_details,
+        'observation': quote.quote_additional_notes,
     }
-    return redirect('invoices:invoices_create_for_item')
+
+    if quote.quote_product_type == 'Anillo de Compromiso' or quote.quote_product_type == 'Anillo de Matrimonio':
+        return redirect('invoices:invoices_create_for_item')
+    elif quote.quote_product_type == 'A medida' or quote.quote_product_type == 'Otro':
+        request.session['invoice_initial_data']['description'] = quote.quote_description
+        return redirect('invoices:invoices_create_for_customized')
+    else:
+        return redirect('invoices:invoices_create_for_customized')
+    
+

@@ -22,11 +22,38 @@ class ProductsCreateListView(View):
     def get(self, request):
         return render(request, 'products/products_create_option.html')
 
-class RingCreateView(CreateView):
+class RingCreateView(View):
     model = Ring
     form_class = RingForm
     template_name = 'products/products_create_ring.html'
     success_url = reverse_lazy('products:products_list')
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, 'products/products_create_ring.html', {
+            'form': form
+        })
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            ring_description = form.cleaned_data['ring_description']
+            ring_size = form.cleaned_data['ring_size']
+            ring_type = form.cleaned_data['ring_type']
+            ring_quality = form.cleaned_data['ring_quality']
+            ring_weight = form.cleaned_data['ring_weight']
+            synthetic_stone = form.cleaned_data['synthetic_stone']
+            jewellery_quantity = form.cleaned_data['jewellery_quantity']    
+            certificate = form.cleaned_data['certificate']
+            image = form.cleaned_data['image']
+            ring = Ring.objects.create(jewellery_name=ring_description, ring_description=ring_description, ring_size=ring_size, ring_type=ring_type, ring_quality=ring_quality, ring_weight=ring_weight, synthetic_stone=synthetic_stone, jewellery_quantity=jewellery_quantity, certificate=certificate, image=image)
+            ring.save()
+            return redirect('products:products_list')
+        print(form.errors)
+        return render(request, 'products/products_create_ring.html', {
+
+            'form': form
+        })
 
 class RingUpdateView(UpdateView):
     model = Ring

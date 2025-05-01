@@ -16,10 +16,13 @@ Facturas
 {% endblock %}
 
 {% block content %}
-<h1>Anillos</h1>
+<h1>Productos</h1>
 
 <button onclick="window.location.href='{% url 'products:products_create_option' %}'">Crear Producto</button>
 
+
+<div class="space-between">
+<h3>Anillos</h3>
 <div class="overflow-auto">
 <table>
     <thead>
@@ -36,8 +39,6 @@ Facturas
                 <td>{{ ring.ring_type }}</td>
                 <td>{{ ring.ring_description }}</td>
                 <td>{{ ring.ring_quality }}</td>
-                <td>{{ ring.ring_weight }}</td>
-                <td>{{ ring.synthetic_stone }}</td>
                 <td>
                     <a href="">Ver</a>
                     <a href="">Editar</a>
@@ -81,10 +82,10 @@ Facturas
     
   </table>
 </div>
+</div>
 
-
-<h1>Piedras</h1>
-
+<div class="space-between">
+<h3>Piedras</h3>
 <div class="overflow-auto">
     <table>
         <thead>
@@ -146,9 +147,10 @@ Facturas
         
       </table>
     </div>
+</div>
 
-
-    <h1>Accesorios</h1>
+<div class="space-between">
+<h3>Accesorios</h3>
 
     <div class="overflow-auto">
         <table>
@@ -214,7 +216,7 @@ Facturas
             
           </table>
         </div>
-
+</div>
 {% endblock %}
 
 {% block extra_scripts %}

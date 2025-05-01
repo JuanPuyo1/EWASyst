@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Client, ClientDocumentType
+from .models import Client
 
 admin.site.register(Client)
-admin.site.register(ClientDocumentType)
  
+

@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Invoice, InvoiceForItem, InvoiceForMaintenance, InvoiceForStone
+from .models import Invoice, InvoiceForItem, InvoiceForMaintenance, InvoiceForStone, InvoiceForCustomized
 from products.models import JewelleryItem, Stone
 
 
@@ -16,26 +16,23 @@ class InvoiceForm(forms.ModelForm):
             'observation': 'Observación',
             'invoice_total': 'Total de Factura',
             'invoice_balance': 'Balance de Factura',
-            'client_signature': 'Firma del Cliente',
         }
-        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'observation', 'invoice_total', 'invoice_balance', 'client_signature']
-
+        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'observation', 'invoice_total', 'invoice_balance']
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
             'invoice_number': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_type': forms.TextInput(attrs={'class': 'form-control'}),
-            'invoice_date': forms.DateInput(attrs={'class': 'form-control'}),
+            'invoice_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'invoice_status': forms.TextInput(attrs={'class': 'form-control'}),
             'observation': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_total': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_balance': forms.TextInput(attrs={'class': 'form-control'}),
-            'client_signature': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
 class InvoiceForItemForm(forms.ModelForm):
     class Meta:
         model = InvoiceForItem
-        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'observation', 'invoice_total', 'invoice_balance', 'client_signature', 'items']
+        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'observation', 'invoice_total', 'invoice_balance', 'items']
         labels = {
             'client': 'Cliente',
             'invoice_number': 'Número de Factura',
@@ -45,19 +42,17 @@ class InvoiceForItemForm(forms.ModelForm):
             'observation': 'Observación',
             'invoice_total': 'Total de Factura',
             'invoice_balance': 'Balance de Factura',
-            'client_signature': 'Firma del Cliente',
             'items': 'Items',
         }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
             'invoice_number': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
             'invoice_type': forms.TextInput(attrs={'class': 'form-control', 'value': 'Factura de Producto', 'readonly': True}),
-            'invoice_date': forms.DateInput(attrs={'class': 'form-control'}),
+            'invoice_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'invoice_status': forms.TextInput(attrs={'class': 'form-control'}),
             'observation': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_total': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_balance': forms.TextInput(attrs={'class': 'form-control'}),
-            'client_signature': forms.FileInput(attrs={'class': 'form-control'}),
             'items': forms.SelectMultiple(attrs={
                 'class': 'form-control select2',  # Add select2 class here
                 'multiple': 'multiple'
@@ -88,6 +83,34 @@ class InvoiceForStoneForm(InvoiceForm):
         widgets = {
             'stone': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class InvoiceForCustomizedForm(InvoiceForm):
+    class Meta:
+        model = InvoiceForCustomized
+        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'description', 'observation', 'invoice_total', 'invoice_balance']
+        labels = {
+            'client': 'Cliente',
+            'invoice_number': 'Número de Factura',
+            'invoice_type': 'Tipo de Factura',
+            'invoice_date': 'Fecha de Factura',
+            'invoice_status': 'Estado de Factura',
+            'description': 'Descripción',
+            'observation': 'Observación',
+            'invoice_total': 'Total de Factura',
+            'invoice_balance': 'Balance de Factura',
+        }
+        widgets = {
+            'client': forms.Select(attrs={'class': 'form-control'}),
+            'invoice_number': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
+            'invoice_type': forms.TextInput(attrs={'class': 'form-control', 'value': 'Factura de Joyas a medida', 'readonly': True}),
+            'invoice_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'invoice_status': forms.TextInput(attrs={'class': 'form-control' ,'readonly': True}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'observation': forms.Textarea(attrs={'class': 'form-control'}),
+            'invoice_total': forms.TextInput(attrs={'class': 'form-control'}),
+            'invoice_balance': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 
 

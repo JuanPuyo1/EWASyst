@@ -7,7 +7,6 @@ class RingForm(forms.ModelForm):
         fields = '__all__'
 
         labels = {
-            'jewellery_name': 'Nombre',
             'jewellery_quantity': 'Cantidad',
             'certificate': 'Certificado',
             'ring_description': 'Descripción detallada del Anillo',
@@ -19,7 +18,6 @@ class RingForm(forms.ModelForm):
         }
 
         widgets = {
-            'jewellery_name': forms.TextInput(attrs={'class': 'form-control', 'value': 'Anillo', 'readonly': True}),
             'jewellery_quantity': forms.TextInput(attrs={'class': 'form-control', 'value': '1', 'readonly': True}),
             'certificate': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'ring_description': forms.TextInput(attrs={'class': 'form-control'}),
@@ -30,6 +28,9 @@ class RingForm(forms.ModelForm):
             'synthetic_stone': forms.CheckboxInput(attrs={'class': 'form-control'}),
         }
 
+        exclude = ['jewellery_name']
+
+    
 
 class ChainOrBraceletForm(forms.ModelForm):
     class Meta:

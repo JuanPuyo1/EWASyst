@@ -15,11 +15,17 @@ Facturas
   </nav>
 {% endblock %}
 
+
+
 {% block content %}
+
+
 <h1>Facturas</h1>
 
-<button onclick="window.location.href='{% url 'invoices:invoices_create_list' %}'">Crear Factura</button>
+<button onclick="window.location.href='{% url 'invoices:invoices_create_option' %}'">Crear Factura</button>
 
+<div class="space-between">
+<h3>Productos</h3>
 <div class="overflow-auto">
 <table>
     <thead>
@@ -33,62 +39,97 @@ Facturas
         </tr>
     </thead>
     <tbody>
-        {% for invoice in invoices %}
+        {% for invoice in invoices_item %}
             <tr>
                 <td>{{ invoice.invoice_number }}</td>
                 <td>{{ invoice.client.name }}</td>
                 <td>{{ invoice.invoice_date }}</td>
-                
-                <td>{{ invoice.total }}</td>
+                <td>{{ invoice.invoice_total }}</td>
                 <td>{{ invoice.invoice_type }}</td>
                 <td>
                     <a href="">Ver</a>
                     <a href="">Editar</a>
-                    <a data-target="modal-example" onclick="toggleModal(event)">Eliminar</a>
+                    <a href="">Eliminar</a>
+                    <a href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">Generar PDF</a>
                 </td>
             </tr>
-
-
-
-            <dialog id="modal-example">
-                <article>
-                  <header>
-                    <button
-                      aria-label="Close"
-                      rel="prev"
-                      data-target="modal-example"
-                      onclick="toggleModal(event)"
-                    ></button>
-                    <h3>¿Está seguro de eliminar esta factura?</h3>
-                  </header>
-                  <p>
-                    Esta factura sera eliminada permanentemente.
-                  </p>
-                  <footer>
-                    <button
-                      role="button"
-                      class="secondary"
-                      data-target="modal-example"
-                      onclick="toggleModal(event)"
-                    >
-                      Cancelar
-                    </button>
-                    <button autofocus onclick="window.location.href='{% url 'invoices:invoices_delete' invoice.id %}'">
-                      Confirmar
-                    </button>
-                  </footer>
-                </article>
-              </dialog>
         {% endfor %}
     </tbody>
     
   </table>
 </div>
+</div>
 
+<div class="space-between">
+<h3>Joyas a Medida</h3>
+<div class="overflow-auto">
+    <table>
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Tipo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices_customized %}
+                <tr>
+                    <td>{{ invoice.invoice_number }}</td>
+                    <td>{{ invoice.client.name }}</td>
+                    <td>{{ invoice.invoice_date }}</td>
+                    <td>{{ invoice.invoice_total }}</td>
+                    <td>{{ invoice.invoice_type }}</td>
+                    <td>
+                        <a href="">Ver</a>
+                        <a href="">Editar</a>
+                        <a href="">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        
+      </table>
+</div>
+</div>
+
+<div class="space-between">
+<h3>Mantenimiento</h3>
+<div class="overflow-auto">
+    <table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices_maintenance %}
+                    <tr>
+                        <td>{{ invoice.invoice_number }}</td>
+                        <td>{{ invoice.client.name }}</td>
+                        <td>{{ invoice.invoice_date }}</td>
+                        <td>{{ invoice.invoice_total }}</td>
+                        <td>{{ invoice.invoice_type }}</td>
+                        <td>
+                            <a href="">Ver</a>
+                            <a href="">Editar</a>
+                            <a href="">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            
+          </table>
+</div>
+</div>
 
 {% endblock %}
 
-{% block extra_scripts %}
-<script src="{% static 'js/modal.js' %}"></script>
-
-{% endblock extra_scripts %}

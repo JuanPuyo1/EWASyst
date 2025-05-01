@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Eliminar Cotización
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+       <li><a href="{% url 'quotes:quote_list' %}">Cotizaciones</a></li>
+       <li>Eliminar Cotización</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>¿Estás seguro de que deseas eliminar esta cotización?</h1>
+<p>Esta acción no se puede deshacer.</p>
+<p>Datos de la cotización:</p>
+<p>Número de Cotización: {{ quote.quote_number }}</p>
+<p>Fecha de Cotización: {{ quote.quote_date }}</p>
+<p>Cliente: {{ quote.client.name }}</p>
+<p>Total de Cotización: {{ quote.quote_total }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Eliminar</button>
+    <a href="{% url 'quotes:quote_list' %}">Cancelar</a>
+</form>
+{% endblock %}

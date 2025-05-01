@@ -35,8 +35,11 @@
         <a href="{% url 'clients:clients_create' 'true' %}" class="btn btn-primary">Crear cliente no existente</a>
     </div>
 
-    
-    
+    <div class="form-group">
+        {{form.quote_product_type.label}}
+        {{form.quote_product_type}}
+    </div>
+
     <div class="form-group">
         {{ form.quote_total.label }}
         {{ form.quote_total }}
@@ -53,8 +56,8 @@
     </div>
 
     <div class="form-group">
-        {{form.quote_details.label}}
-        {{form.quote_details}}
+        {{form.quote_additional_notes.label}}
+        {{form.quote_additional_notes}}
     </div>
     
 
