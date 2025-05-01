@@ -4,6 +4,17 @@
 <title>Crear Factura por Item</title>
 {% endblock %}
 
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+       <li><a href="{% url 'invoices:invoices_list' %}">Facturas</a></li>
+       <li><a href="{% url 'invoices:invoices_create_list' %}">Opciones de Creación de Factura</a></li>
+       <li>Crear Factura por Item</li>
+    </ul>
+  </nav>
+{% endblock %}
+
 {% block content %}
 <h1>Crear Factura por Item</h1>
 <form method="post">

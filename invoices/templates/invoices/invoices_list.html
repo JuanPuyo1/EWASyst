@@ -6,6 +6,15 @@
 Facturas
 {% endblock %}
 
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+       <li>Facturas</li>
+    </ul>
+  </nav>
+{% endblock %}
+
 {% block content %}
 <h1>Facturas</h1>
 

@@ -44,6 +44,7 @@ class InvoiceForItem(Invoice):
     
     items = models.ManyToManyField(JewelleryItem, related_name='items', blank=True)        
 
+    
     def __str__(self):
         return f"Factura de Item {self.pk}"
 

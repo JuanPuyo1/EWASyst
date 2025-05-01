@@ -50,8 +50,8 @@ class InvoiceForItemForm(forms.ModelForm):
         }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
-            'invoice_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'invoice_type': forms.TextInput(attrs={'class': 'form-control'}),
+            'invoice_number': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
+            'invoice_type': forms.TextInput(attrs={'class': 'form-control', 'value': 'Factura de Producto', 'readonly': True}),
             'invoice_date': forms.DateInput(attrs={'class': 'form-control'}),
             'invoice_status': forms.TextInput(attrs={'class': 'form-control'}),
             'observation': forms.TextInput(attrs={'class': 'form-control'}),
@@ -63,6 +63,9 @@ class InvoiceForItemForm(forms.ModelForm):
                 'multiple': 'multiple'
             }),
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['invoice_number'].initial = '25' + str(InvoiceForItem.objects.count() + 1)
 
 class InvoiceForMaintenanceForm(InvoiceForm):
     class Meta:
