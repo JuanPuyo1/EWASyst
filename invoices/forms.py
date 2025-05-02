@@ -14,17 +14,19 @@ class InvoiceForm(forms.ModelForm):
             'invoice_date': 'Fecha de Factura',
             'invoice_status': 'Estado de Factura',
             'observation': 'Observación',
+            'additional_notes': 'Notas Adicionales',
             'invoice_total': 'Total de Factura',
             'invoice_balance': 'Balance de Factura',
         }
-        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'observation', 'invoice_total', 'invoice_balance']
+        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'observation', 'additional_notes', 'invoice_total', 'invoice_balance']
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
             'invoice_number': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_type': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'invoice_status': forms.TextInput(attrs={'class': 'form-control'}),
-            'observation': forms.TextInput(attrs={'class': 'form-control'}),
+            'observation': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Peso, Tamaño, piedra natural?, diamantes de laboratorio, etc.'}),
+            'additional_notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Anillo como parte de pago?, etc.'}),
             'invoice_total': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_balance': forms.TextInput(attrs={'class': 'form-control'}),
         }
@@ -32,7 +34,7 @@ class InvoiceForm(forms.ModelForm):
 class InvoiceForItemForm(forms.ModelForm):
     class Meta:
         model = InvoiceForItem
-        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'observation', 'invoice_total', 'invoice_balance', 'items']
+        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'additional_notes', 'invoice_status', 'observation', 'invoice_total', 'invoice_balance', 'items']
         labels = {
             'client': 'Cliente',
             'invoice_number': 'Número de Factura',
@@ -43,6 +45,7 @@ class InvoiceForItemForm(forms.ModelForm):
             'invoice_total': 'Total de Factura',
             'invoice_balance': 'Balance de Factura',
             'items': 'Items',
+            'additional_notes': 'Notas Adicionales',
         }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
@@ -57,7 +60,9 @@ class InvoiceForItemForm(forms.ModelForm):
                 'class': 'form-control select2',  # Add select2 class here
                 'multiple': 'multiple'
             }),
+            'additional_notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Anillo como parte de pago?, etc.'}),
         }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['invoice_number'].initial = '25' + str(InvoiceForItem.objects.count() + 1)
@@ -87,7 +92,7 @@ class InvoiceForStoneForm(InvoiceForm):
 class InvoiceForCustomizedForm(InvoiceForm):
     class Meta:
         model = InvoiceForCustomized
-        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'description', 'observation', 'invoice_total', 'invoice_balance']
+        fields = ['client', 'invoice_number', 'invoice_type', 'invoice_date', 'invoice_status', 'description', 'observation','additional_notes', 'invoice_total', 'invoice_balance']
         labels = {
             'client': 'Cliente',
             'invoice_number': 'Número de Factura',
@@ -98,6 +103,7 @@ class InvoiceForCustomizedForm(InvoiceForm):
             'observation': 'Observación',
             'invoice_total': 'Total de Factura',
             'invoice_balance': 'Balance de Factura',
+            'additional_notes': 'Notas Adicionales',
         }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
@@ -106,7 +112,8 @@ class InvoiceForCustomizedForm(InvoiceForm):
             'invoice_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'invoice_status': forms.TextInput(attrs={'class': 'form-control' ,'readonly': True}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'observation': forms.Textarea(attrs={'class': 'form-control'}),
+            'observation': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Peso, Tamaño, piedra natural?, diamantes de laboratorio, etc.'}),
+            'additional_notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Anillo como parte de pago?, etc.'}),
             'invoice_total': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_balance': forms.TextInput(attrs={'class': 'form-control'}),
         }

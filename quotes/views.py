@@ -153,7 +153,7 @@ def create_invoice(request, quote_id):
         'client': quote.client.id,  # Store ID instead of object
         'invoice_number': quote.quote_number,
         'invoice_total': str(quote.quote_total),  # Convert Decimal to string
-        'observation': quote.quote_additional_notes,
+        'additional_notes': quote.quote_additional_notes,
     }
 
     if quote.quote_product_type == 'Anillo de Compromiso' or quote.quote_product_type == 'Anillo de Matrimonio':

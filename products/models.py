@@ -2,16 +2,15 @@ from django.db import models
 
 # Create your models here.
 class JewelleryItem(models.Model):
-    jewellery_name = models.CharField(max_length=100, null=True, blank=True)
+    jewellery_description = models.CharField(max_length=100, null=True, blank=True)
     jewellery_quantity = models.IntegerField(null=True, blank=True)
     certificate = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
-        return self.jewellery_name
+        return self.jewellery_description
 
 
 class Stone(models.Model):
-    stone_description = models.CharField(max_length=100, null=True, blank=True)
     stone_color = models.CharField(max_length=100, null=True, blank=True)
     stone_clarity = models.CharField(max_length=100, null=True, blank=True)
     stone_carat = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -21,11 +20,10 @@ class Stone(models.Model):
         verbose_name_plural = 'Piedras'
 
     def __str__(self):
-        return self.stone_description or self.jewellery_name
+        return self.stone_color or self.jewellery_description
     
 
 class Ring(JewelleryItem):
-    ring_description = models.CharField(max_length=100, null=True, blank=True)
     ring_size = models.CharField(max_length=100, null=True, blank=True)
 
     RING_TYPE_CHOICES = [
@@ -43,7 +41,6 @@ class Ring(JewelleryItem):
         ('Plata 950', 'Plata 950'),        
     ]
     ring_quality = models.CharField(max_length=100, null=True, blank=True, choices=RING_QUALITY_CHOICES)
-    ring_weight = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     synthetic_stone = models.BooleanField(default=False)
     image = models.ImageField(upload_to='media/images/rings/', null=True, blank=True)
     def __str__(self):
@@ -51,7 +48,6 @@ class Ring(JewelleryItem):
 
 
 class ChainOrBracelet(JewelleryItem):
-    chain_or_bracelet_weight = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     chain_or_bracelet_quality = models.CharField(max_length=100, null=True, blank=True)
     long = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     fabric = models.CharField(max_length=100, null=True, blank=True)
