@@ -24,7 +24,20 @@ Facturas
 
 <button onclick="window.location.href='{% url 'invoices:invoices_create_option' %}'">Crear Factura</button>
 
+
+
 <div class="space-between">
+
+<div class="select-container">
+    <label for="invoice_type">Filtrar tipo de factura:</label>
+    <select name="invoice_type" id="invoice_type">
+        <option value="all" disabled selected>Selecciona un tipo de factura</option>
+        <option value="item" {% if filter_type == 'item' %}selected{% endif %}>Productos</option>
+        <option value="customized" {% if filter_type == 'customized' %}selected{% endif %}>Joyas a Medida</option>
+        <option value="maintenance" {% if filter_type == 'maintenance' %}selected{% endif %}>Mantenimiento</option> 
+    </select>
+</div>
+
 <h3>Productos</h3>
 <div class="overflow-auto">
 <table>
@@ -39,7 +52,7 @@ Facturas
         </tr>
     </thead>
     <tbody>
-        {% for invoice in invoices_item %}
+        {% for invoice in invoices %}
             <tr>
                 <td>{{ invoice.invoice_number }}</td>
                 <td>{{ invoice.client.name }}</td>
@@ -60,76 +73,35 @@ Facturas
 </div>
 </div>
 
-<div class="space-between">
-<h3>Joyas a Medida</h3>
-<div class="overflow-auto">
-    <table>
-        <thead>
-            <tr>
-                <th>Número</th>
-                <th>Cliente</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Tipo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for invoice in invoices_customized %}
-                <tr>
-                    <td>{{ invoice.invoice_number }}</td>
-                    <td>{{ invoice.client.name }}</td>
-                    <td>{{ invoice.invoice_date }}</td>
-                    <td>{{ invoice.invoice_total }}</td>
-                    <td>{{ invoice.invoice_type }}</td>
-                    <td>
-                        <a href="">Ver</a>
-                        <a href="">Editar</a>
-                        <a href="">Eliminar</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        
-      </table>
-</div>
+
 </div>
 
-<div class="space-between">
-<h3>Mantenimiento</h3>
-<div class="overflow-auto">
-    <table>
-        <table>
-            <thead>
-                <tr>
-                    <th>Número</th>
-                    <th>Cliente</th>
-                    <th>Fecha</th>
-                    <th>Total</th>
-                    <th>Tipo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for invoice in invoices_maintenance %}
-                    <tr>
-                        <td>{{ invoice.invoice_number }}</td>
-                        <td>{{ invoice.client.name }}</td>
-                        <td>{{ invoice.invoice_date }}</td>
-                        <td>{{ invoice.invoice_total }}</td>
-                        <td>{{ invoice.invoice_type }}</td>
-                        <td>
-                            <a href="">Ver</a>
-                            <a href="">Editar</a>
-                            <a href="">Eliminar</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const invoiceType = document.getElementById('invoice_type');
+        invoiceType.addEventListener('change', function() {
+            const invoiceType = document.getElementById('invoice_type').value;
             
-          </table>
-</div>
-</div>
+            switch (invoiceType) {
+                case 'item':
+                    window.location.href = '{% url 'invoices:invoices_list' %}?invoice_type=item';
+                    break;
+                case 'customized':
+                    window.location.href = '{% url 'invoices:invoices_list' %}?invoice_type=customized';
+                    break;
+                case 'maintenance':
+                    window.location.href = '{% url 'invoices:invoices_list' %}?invoice_type=maintenance';
+                    break;
+                default:
+                    window.location.href = '{% url 'invoices:invoices_list' %}';
+            }
+        });
+    });
+    </script>
+
 
 {% endblock %}
 

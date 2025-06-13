@@ -18,13 +18,24 @@ from reportlab.lib.utils import simpleSplit
 
 class InvoicesListView(View):
     def get(self, request):
-        invoices_item = InvoiceForItem.objects.all()
-        invoices_maintenance = InvoiceForMaintenance.objects.all()
-        invoices_customized = InvoiceForCustomized.objects.all()
+        invoices = []         
+        filter_type = None
+
+        if request.GET.get('invoice_type'):
+            invoice_type = request.GET.get('invoice_type')
+            if invoice_type == 'item':
+                invoices = InvoiceForItem.objects.all()
+                filter_type = "item"
+            elif invoice_type == 'maintenance':
+                invoices = InvoiceForMaintenance.objects.all()
+                filter_type = "maintenance"
+            elif invoice_type == 'customized':
+                invoices = InvoiceForCustomized.objects.all()
+                filter_type = "customized"
+
         context = {
-            'invoices_item': invoices_item,
-            'invoices_maintenance': invoices_maintenance,
-            'invoices_customized': invoices_customized,
+            'invoices': invoices,
+            'filter_type': filter_type
         }
         return render(request, 'invoices/invoices_list.html', context)
 
