@@ -10,5 +10,6 @@ urlpatterns = [
     path('invoices_create_for_customized/', views.InvoicesCreateForCustomizedView.as_view(), name='invoices_create_for_customized'),
     path('invoices_delete/<int:pk>/', views.invoices_delete, name='invoices_delete'),
     path('generate_pdf_item/<int:invoice_id>/', views.generate_pdf_item, name='generate_pdf_item'),
+    path('invoices_confirm_delete/<int:pk>/', views.InvoicesConfirmDeleteView.as_view(), name='invoices_confirm_delete'),
 ]
 

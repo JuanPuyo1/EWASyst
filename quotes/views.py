@@ -63,8 +63,12 @@ def generate_pdf(request, quote_id):
     p.setFont("Helvetica", 10)
     p.drawString(50, 600, "EMITIDO A:")
     p.drawString(50, 580, f"{quote.client.name}")
-    p.drawString(50, 560, f"{quote.client.email}")
-    p.drawString(50, 540, f"{quote.client.phone}")
+    p.drawString(50, 560, f"{quote.client.document_type} {quote.client.document_number}")
+    p.drawString(50, 540, f"{quote.client.email}")
+    if quote.client.phone:
+        p.drawString(50, 520, f"{quote.client.phone}")
+    else:
+        p.drawString(50, 520, f"")
     
     # Quote details (right side)
     p.drawString(450, 600, "COTIZACIÓN")
@@ -95,8 +99,8 @@ def generate_pdf(request, quote_id):
     y_position += (len(description_lines) - 1) * 15  # Move back up
     
     # Draw other columns
-    p.drawString(300, y_position, f"COP {quote.quote_total:,.0f}")
-    p.drawString(400, y_position, "1")
+    p.drawString(300, y_position, f"COP {quote.quote_value:,.0f}")
+    p.drawString(400, y_position, f"{quote.quote_quantity}")
     p.drawString(480, y_position, f"COP {quote.quote_total:,.0f}")
     
     # Adjust y_position for next section
@@ -112,7 +116,17 @@ def generate_pdf(request, quote_id):
     # Notes section
     y_position -= 40
     p.drawString(50, y_position, "Notas:")
-    p.drawString(50, y_position - 20, quote.quote_additional_notes)
+    y_position -= 20  # Move down for the first note line
+
+    if quote.quote_additional_notes:
+        for line in quote.quote_additional_notes.split('\n'):
+            # Split the line to fit within 500 points width
+            wrapped_lines = simpleSplit(line, p._fontname, p._fontsize, 500)
+            for wrapped_line in wrapped_lines:
+                p.drawString(50, y_position, wrapped_line)
+                y_position -= 15  # Move down for each wrapped line
+    else:
+        p.drawString(50, y_position, "No hay notas adicionales")
     
     # Footer
     y_position = 150  # Adjust this value as needed
@@ -126,7 +140,7 @@ def generate_pdf(request, quote_id):
     p.drawString(50, y_position - 80, "Cuenta de Ahorros Davivienda:")
     p.drawString(50, y_position - 95, "457900065071")
     p.drawString(50, y_position - 110, "Para más información puede")
-    p.drawString(50, y_position - 125, "contactarnos aquí")
+    p.drawString(50, y_position - 125, "contactarnos www.ewajoyeria.com")
     
     # GRACIAS and signature (right side)
     p.drawString(450, y_position, "GRACIAS")

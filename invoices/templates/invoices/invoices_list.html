@@ -49,7 +49,7 @@ Facturas
                 <td>
                     <a href="">Ver</a>
                     <a href="">Editar</a>
-                    <a href="">Eliminar</a>
+                    <a href="{% url 'invoices:invoices_confirm_delete' invoice.id %}">Eliminar</a>
                     <a href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">Generar PDF</a>
                 </td>
             </tr>

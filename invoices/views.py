@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import Invoice, InvoiceForItem, InvoiceForMaintenance, InvoiceForCustomized, JewelleryItem
+from .models import InvoiceForItem, InvoiceForMaintenance, InvoiceForCustomized, JewelleryItem
 from .forms import InvoiceForItemForm, InvoiceForCustomizedForm
 from django.db.models import QuerySet
+from django.urls import reverse_lazy
+from django.views.generic.edit import DeleteView
 # Create your views here.
 
 #Generar PDF
@@ -29,6 +31,45 @@ class InvoicesListView(View):
 class InvoicesCreateOptionView(View):
     def get(self, request):
         return render(request, 'invoices/invoices_create_option.html')
+
+class InvoicesConfirmDeleteView(View):
+    template_name = 'invoices/invoices_confirm_delete.html'
+    success_url = reverse_lazy('invoices:invoices_list')
+    
+    def get(self, request, *args, **kwargs):
+        invoice = get_object_or_404(InvoiceForItem, pk=kwargs['pk'])
+
+        if invoice:
+            return render(request, self.template_name, {'invoice': invoice})
+        else:
+            invoice = get_object_or_404(InvoiceForMaintenance, pk=kwargs['pk'])
+            if invoice:
+                return render(request, self.template_name, {'invoice': invoice})
+            else:
+                invoice = get_object_or_404(InvoiceForCustomized, pk=kwargs['pk'])
+                if invoice:
+                    return render(request, self.template_name, {'invoice': invoice})
+                else:
+                    print("No se encontró la factura")
+    
+    def post(self, request, *args, **kwargs):
+        invoice = get_object_or_404(InvoiceForItem, pk=kwargs['pk'])
+        if invoice:
+            invoice.delete()
+            return redirect(self.success_url)
+        else:
+            invoice = get_object_or_404(InvoiceForMaintenance, pk=kwargs['pk'])
+            if invoice:
+                invoice.delete()
+                return redirect(self.success_url)
+            else:
+                invoice = get_object_or_404(InvoiceForCustomized, pk=kwargs['pk'])
+                if invoice:
+                    invoice.delete()
+                    return redirect(self.success_url)
+                else:
+                    print("No se encontró la factura")
+                    return redirect(self.success_url)
 
 class InvoicesCreateForItemView(View):
     def get(self, request):
