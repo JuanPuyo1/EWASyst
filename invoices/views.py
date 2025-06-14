@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import InvoiceForItem, InvoiceForMaintenance, InvoiceForCustomized, JewelleryItem
-from .forms import InvoiceForItemForm, InvoiceForCustomizedForm
+from .models import Invoice
+from .forms import InvoiceForm
 from django.db.models import QuerySet
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
@@ -18,88 +18,56 @@ from reportlab.lib.utils import simpleSplit
 
 class InvoicesListView(View):
     def get(self, request):
-        invoices = []         
-        filter_type = None
-
-        if request.GET.get('invoice_type'):
-            invoice_type = request.GET.get('invoice_type')
-            if invoice_type == 'item':
-                invoices = InvoiceForItem.objects.all()
-                filter_type = "item"
-            elif invoice_type == 'maintenance':
-                invoices = InvoiceForMaintenance.objects.all()
-                filter_type = "maintenance"
-            elif invoice_type == 'customized':
-                invoices = InvoiceForCustomized.objects.all()
-                filter_type = "customized"
-
+        invoices = Invoice.objects.all()
         context = {
             'invoices': invoices,
-            'filter_type': filter_type
         }
         return render(request, 'invoices/invoices_list.html', context)
 
-class InvoicesCreateOptionView(View):
-    def get(self, request):
-        return render(request, 'invoices/invoices_create_option.html')
 
 class InvoicesConfirmDeleteView(View):
     template_name = 'invoices/invoices_confirm_delete.html'
-    success_url = reverse_lazy('invoices:invoices_list')
     
     def get(self, request, *args, **kwargs):
-        invoice = get_object_or_404(InvoiceForItem, pk=kwargs['pk'])
 
-        if invoice:
-            return render(request, self.template_name, {'invoice': invoice})
-        else:
-            invoice = get_object_or_404(InvoiceForMaintenance, pk=kwargs['pk'])
+        try:
+            invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
+
             if invoice:
                 return render(request, self.template_name, {'invoice': invoice})
-            else:
-                invoice = get_object_or_404(InvoiceForCustomized, pk=kwargs['pk'])
-                if invoice:
-                    return render(request, self.template_name, {'invoice': invoice})
-                else:
-                    print("No se encontró la factura")
+        except Exception as e:
+            print(e, "Error al obtener la factura")
+            return redirect('invoices:invoices_list')
     
     def post(self, request, *args, **kwargs):
-        invoice = get_object_or_404(InvoiceForItem, pk=kwargs['pk'])
-        if invoice:
-            invoice.delete()
-            return redirect(self.success_url)
-        else:
-            invoice = get_object_or_404(InvoiceForMaintenance, pk=kwargs['pk'])
+        try:
+            invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
             if invoice:
                 invoice.delete()
-                return redirect(self.success_url)
+                return redirect('invoices:invoices_list')
             else:
-                invoice = get_object_or_404(InvoiceForCustomized, pk=kwargs['pk'])
-                if invoice:
-                    invoice.delete()
-                    return redirect(self.success_url)
-                else:
-                    print("No se encontró la factura")
-                    return redirect(self.success_url)
+                print("No se encontró la factura")
+                return redirect('invoices:invoices_list')
+        except Exception as e:
+            print(e, "Error al eliminar la factura")
+            return redirect('invoices:invoices_list')
 
-class InvoicesCreateForItemView(View):
+class InvoicesCreate(View):
     def get(self, request):
 
         initial_data = request.session.pop('invoice_initial_data', None)
         if initial_data:
-            form = InvoiceForItemForm(initial=initial_data)
+            form = InvoiceForm(initial=initial_data)
         else:
-            form = InvoiceForItemForm()
-        items = JewelleryItem.objects.all()
+            form = InvoiceForm()
         context = {
             'form': form,
-            'items': items
         }
         request.session['invoice_initial_data'] = None
         return render(request, 'invoices/invoices_create.html', context)
 
     def post(self, request):
-        form = InvoiceForItemForm(request.POST)
+        form = InvoiceForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('invoices:invoices_list')
@@ -111,7 +79,7 @@ def generate_pdf_item(request, invoice_id):
     p = canvas.Canvas(buffer)
     
     # Get quote data
-    invoice = InvoiceForItem.objects.get(id=invoice_id)
+    invoice = Invoice.objects.get(id=invoice_id)
     
     # Set font
     p.setFont("Helvetica", 10)

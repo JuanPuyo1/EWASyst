@@ -22,23 +22,14 @@ Facturas
 
 <h1>Facturas</h1>
 
-<button onclick="window.location.href='{% url 'invoices:invoices_create_option' %}'">Crear Factura</button>
+<button onclick="window.location.href='{% url 'invoices:invoices_create' %}'">Crear Factura</button>
 
 
 
 <div class="space-between">
 
-<div class="select-container">
-    <label for="invoice_type">Filtrar tipo de factura:</label>
-    <select name="invoice_type" id="invoice_type">
-        <option value="all" disabled selected>Selecciona un tipo de factura</option>
-        <option value="item" {% if filter_type == 'item' %}selected{% endif %}>Productos</option>
-        <option value="customized" {% if filter_type == 'customized' %}selected{% endif %}>Joyas a Medida</option>
-        <option value="maintenance" {% if filter_type == 'maintenance' %}selected{% endif %}>Mantenimiento</option> 
-    </select>
-</div>
 
-<h3>Productos</h3>
+<h3>Facturas</h3>
 <div class="overflow-auto">
 <table>
     <thead>

@@ -4,8 +4,8 @@ from .forms import QuoteForm
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from invoices.models import InvoiceForItem
-from invoices.forms import InvoiceForItemForm
+from invoices.models import Invoice
+from invoices.forms import InvoiceForm
 from django.shortcuts import redirect
 
 #Generar PDF
@@ -170,12 +170,6 @@ def create_invoice(request, quote_id):
         'additional_notes': quote.quote_additional_notes,
     }
 
-    if quote.quote_product_type == 'Anillo de Compromiso' or quote.quote_product_type == 'Anillo de Matrimonio':
-        return redirect('invoices:invoices_create_for_item')
-    elif quote.quote_product_type == 'A medida' or quote.quote_product_type == 'Otro':
-        request.session['invoice_initial_data']['description'] = quote.quote_description
-        return redirect('invoices:invoices_create_for_customized')
-    else:
-        return redirect('invoices:invoices_create_for_customized')
+    return redirect('invoices:invoices_create_for_item')
     
 
