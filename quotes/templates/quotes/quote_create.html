@@ -18,6 +18,7 @@
 <h1>Crear Cotización</h1>
 <form method="post">
 
+
     {% csrf_token %}
     <div class="form-group">
         {{form.quote_number.label}}
@@ -48,21 +49,51 @@
 
 
     <div class="form-group">
+        {{ form.quote_description.label }}
+        {{ form.quote_description }}
+    </div>
+
+    <div class="form-group">
         {{form.quote_value.label}}
         {{form.quote_value}}
     </div>
 
+    <!-- Discount fields -->
+     {% if quote.quote_discount is not None %}
+     <div class="form-group">
+        {{form.quote_discount.label}}
+        {{form.quote_discount}}
+    </div>
+    <div class="form-group">
+        {{form.quote_discount_description.label}}
+        {{form.quote_discount_description}}
+    </div>
+    {% else %}
+    <div class="form-group">
+        <input type="checkbox" name="quote_discount" id="quote_discount">
+        <label for="quote_discount">Se aplica un abono a la cotización?</label>
+        <span class="sub-label" style="font-size: 14px; color: #6c757d;">E.j: Anillos de oro tasados, etc.</span>
+    </div>
+
+    <div class="discount_fields" id="discount_fields" style="display: none;">
+        <div class="form-group">
+            {{form.quote_discount.label}}
+            {{form.quote_discount}}
+        </div>
+        <div class="form-group">
+            {{form.quote_discount_description.label}}
+            {{form.quote_discount_description}}
+        </div>
+    </div>
+    {% endif %}
+    <!-- End discount fields -->
 
     <div class="form-group">
         {{ form.quote_total.label }}
         {{ form.quote_total }}
     </div>
 
-    
-    <div class="form-group">
-        {{ form.quote_description.label }}
-        {{ form.quote_description }}
-    </div>
+
 
     <div class="form-group">
         {{form.quote_additional_notes.label}}
@@ -72,4 +103,16 @@
 
     <button type="submit">Crear</button>
 </form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var discountCheckbox = document.getElementById('quote_discount');
+        var discountFields = document.getElementById('discount_fields');
+        discountCheckbox.addEventListener('change', function() {
+            discountFields.style.display = this.checked ? 'block' : 'none';
+        });
+    });
+</script>
 {% endblock %}

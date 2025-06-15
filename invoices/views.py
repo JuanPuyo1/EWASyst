@@ -71,6 +71,9 @@ class InvoicesCreate(View):
         if form.is_valid():
             form.save()
             return redirect('invoices:invoices_list')
+        else:
+            print(form.errors)
+            return redirect('invoices:invoices_create')
 
 def generate_pdf_item(request, invoice_id):
     BASE_DIR = settings.BASE_DIR

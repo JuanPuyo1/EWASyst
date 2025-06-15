@@ -32,7 +32,13 @@ class QuoteUpdateView(UpdateView):
     model = Quote
     form_class = QuoteForm
     template_name = 'quotes/quote_create.html'
+
     success_url = reverse_lazy('quotes:quote_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['quote'] = Quote.objects.get(id=self.kwargs['pk'])
+        return context
 
 class QuoteDeleteView(DeleteView):
     model = Quote
@@ -63,8 +69,14 @@ def generate_pdf(request, quote_id):
     p.setFont("Helvetica", 10)
     p.drawString(50, 600, "EMITIDO A:")
     p.drawString(50, 580, f"{quote.client.name}")
-    p.drawString(50, 560, f"{quote.client.document_type} {quote.client.document_number}")
-    p.drawString(50, 540, f"{quote.client.email}")
+    if quote.client.document_number:
+        p.drawString(50, 560, f"{quote.client.document_type} {quote.client.document_number}")
+    else:
+        p.drawString(50, 560, f"")
+    if quote.client.email:
+        p.drawString(50, 540, f"{quote.client.email}")
+    else:
+        p.drawString(50, 540, f"")
     if quote.client.phone:
         p.drawString(50, 520, f"{quote.client.phone}")
     else:
@@ -170,6 +182,6 @@ def create_invoice(request, quote_id):
         'additional_notes': quote.quote_additional_notes,
     }
 
-    return redirect('invoices:invoices_create_for_item')
+    return redirect('invoices:invoices_create')
     
 
