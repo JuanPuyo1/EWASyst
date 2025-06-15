@@ -106,19 +106,42 @@ def generate_pdf(request, quote_id):
     for line in description_lines:
         p.drawString(60, y_position, line)
         y_position -= 15  # Move down 15 points for next line
+
+    # Save the y_position after the last description line
+    after_description_y = y_position
+
+    # Draw other columns for the main row (align with the first line of description)
+    main_row_y = after_description_y + 15 * len(description_lines)
+    p.drawString(300, main_row_y, f"COP {quote.quote_value:,.0f}")
+    p.drawString(400, main_row_y, f"{quote.quote_quantity}")
+    p.drawString(480, main_row_y, f"COP {quote.quote_value:,.0f}")
+
     
-    # Reset y_position to the highest line for other columns
-    y_position += (len(description_lines) - 1) * 15  # Move back up
+
+    # Discount row (if any)
+    if quote.quote_discount is not None and quote.quote_discount > 0:
+        # Split by newlines first, then wrap each line
+        discount_desc_lines = []
+        for desc_line in (quote.quote_discount_description or "Descuento").split('\n'):
+            discount_desc_lines.extend(simpleSplit(desc_line, p._fontname, p._fontsize, 220))
+        discount_y = after_description_y - 15  # Start right after the description
+
+        for i, line in enumerate(discount_desc_lines):
+            p.drawString(60, discount_y, line)
+            # Only the first line gets the value/qty/total columns
+            if i == 0:
+                p.drawString(300, discount_y, f"COP {- quote.quote_discount:,.0f}")
+                p.drawString(400, discount_y, "")  # QTY empty
+                p.drawString(480, discount_y, f"COP {- quote.quote_discount:,.0f}")  # TOTAL empty
+            discount_y -= 15
+
+        y_position = discount_y  # Update y_position for the next section
+    else:
+        y_position = after_description_y
+
+    # Now y_position is correct for the next section (e.g., TOTAL row)
+    y_position -= 15
     
-    # Draw other columns
-    p.drawString(300, y_position, f"COP {quote.quote_value:,.0f}")
-    p.drawString(400, y_position, f"{quote.quote_quantity}")
-    p.drawString(480, y_position, f"COP {quote.quote_total:,.0f}")
-    
-    # Adjust y_position for next section
-    y_position -= max(30, len(description_lines) * 15)  # Use the larger of standard spacing or text height
-    
-    # ... rest of the code ...
     p.setFillColorRGB(0.9, 0.9, 0.9)
     p.rect(50, y_position, 500, 20, fill=True)
     p.setFillColorRGB(0, 0, 0)
