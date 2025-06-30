@@ -6,14 +6,9 @@ class Invoice(models.Model):
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, null=True, blank=True)
     invoice_number = models.CharField(max_length=100, null=True, blank=True)
     
-    INVOICE_TYPE_CHOICES = [
-        ('Producto', 'Producto'),
-        ('Mantenimiento', 'Mantenimiento'),
-        ('Piedras', 'Piedras'),
-        ('Joyas a medida', 'Joyas a medida'),
-    ]
     
-    invoice_type = models.CharField(max_length=100, null=True, blank=True, choices=INVOICE_TYPE_CHOICES)
+    
+    invoice_type = models.CharField(max_length=100, null=True, blank=True)
     invoice_date = models.DateField(null=False, blank=False, default=timezone.now)
 
     INVOICE_STATUS_CHOICES = [

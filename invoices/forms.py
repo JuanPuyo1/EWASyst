@@ -25,7 +25,7 @@ class InvoiceForm(forms.ModelForm):
             'invoice_type': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'invoice_status': forms.TextInput(attrs={'class': 'form-control'}),
-            'observation': forms.TextInput(attrs={'class': 'form-control'}),
+            'observation': forms.Textarea(attrs={'class': 'form-control'}),
             'invoice_quantity': forms.TextInput(attrs={'class': 'form-control'}),
             'additional_notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Anillo como parte de pago?, etc.'}),
             'invoice_total': forms.TextInput(attrs={'class': 'form-control'}),

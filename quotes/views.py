@@ -202,7 +202,10 @@ def create_invoice(request, quote_id):
         'client': quote.client.id,  # Store ID instead of object
         'invoice_number': quote.quote_number,
         'invoice_total': str(quote.quote_total),  # Convert Decimal to string
+        'observation': quote.quote_description,
+        'invoice_quantity': quote.quote_quantity,
         'additional_notes': quote.quote_additional_notes,
+        'invoice_type': quote.quote_product_type,
     }
 
     return redirect('invoices:invoices_create')

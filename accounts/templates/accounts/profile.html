@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Perfil
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+        <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+        <li>Perfil</li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<h1>Perfil</h1>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<p>Puede cambiar su nombre de usuario</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+
+
+{% endblock %}

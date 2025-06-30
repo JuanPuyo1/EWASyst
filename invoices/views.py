@@ -122,14 +122,13 @@ def generate_pdf_item(request, invoice_id):
     start_y = y_position  # Remember starting position
     
     # Process each item description
-    for item in invoice.items.all():
-        # Split description into lines that fit within 220 points width
-        description_lines = simpleSplit(item.jewellery_name, p._fontname, p._fontsize, 220)
+    description_lines = simpleSplit(invoice.observation, p._fontname, p._fontsize, 220)
+    
         
         # Draw each line of the description
-        for line in description_lines:
-            p.drawString(60, y_position, line)
-            y_position -= 15  # Move down 15 points for next line
+    for line in description_lines:
+        p.drawString(60, y_position, line)
+        y_position -= 15  # Move down 15 points for next line
         
         # Add some spacing between items
         y_position -= 10
@@ -177,12 +176,20 @@ def generate_pdf_item(request, invoice_id):
     # Notes section
     y_position -= 40
     p.drawString(50, y_position, "Notas:")
-    p.drawString(50, y_position - 20, invoice.observation)
+
+    additional_notes_lines = simpleSplit(invoice.additional_notes, p._fontname, p._fontsize, 220)
+    y_position -= 15
+    for line in additional_notes_lines:
+        p.drawString(50, y_position, line)
+        y_position -= 10
     
+    
+
     # Footer
-    y_position = 150  # Adjust this value as needed
+    y_position = 120  # Adjust this value as needed
     
     # DETALLES section (left side)
+
     p.drawString(50, y_position, "DETALLES")
     p.drawString(50, y_position - 20, "Métodos de pago:")
     p.drawString(50, y_position - 35, "Daviplata-Nequi: 3105458202")
