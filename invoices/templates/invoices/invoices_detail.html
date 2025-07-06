@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detalle de la Factura
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+       <li><a href="{% url 'invoices:invoices_list' %}">Facturas</a></li>
+       <li>Detalle de la Factura {{ invoice.invoice_number }}</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+
+{% block content %}
+
+<h1>Detalle de la Factura {{ invoice.invoice_number }}</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="{% url 'invoices:invoices_update' invoice.id %}" class="btn btn-primary">Editar</a>
+    </div>
+    <div class="col-md-6">
+        <a href="{% url 'invoices:invoices_delete' invoice.id %}" class="btn btn-danger">Eliminar</a>
+    </div>
+</div>
+<p>Fecha de creación: {{ invoice.created_at }}</p>
+
+<p>Número de Factura: {{ invoice.invoice_number }}</p>
+<p>Estado: {{ invoice.invoice_status }}</p>
+<p>Cliente: {{ invoice.client.name }}</p>
+<p>Fecha: {{ invoice.invoice_date }}</p>
+<p>Total: {{ invoice.invoice_total }}</p>
+<p>Abono: {{ invoice.invoice_balance }}</p>
+<p>Restante: {{ restante }}</p>
+<p>Tipo: {{ invoice.invoice_type }}</p>
+<p>Descripción: {{ invoice.description }}</p>
+<p>Notas: {{ invoice.observation }}</p>
+
+{% endblock %}
+
+

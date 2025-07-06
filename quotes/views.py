@@ -4,6 +4,7 @@ from .forms import QuoteForm
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView
 from invoices.models import Invoice
 from invoices.forms import InvoiceForm
 from django.shortcuts import redirect
@@ -19,21 +20,26 @@ from reportlab.lib.utils import simpleSplit
 
 class QuoteView(ListView):
     model = Quote
-    template_name = 'quote_list.html'
+    template_name = 'quotes/quotes_list.html'
     context_object_name = 'quotes'
 
 class QuoteCreateView(CreateView):
     model = Quote
     form_class = QuoteForm
-    template_name = 'quotes/quote_create.html'
-    success_url = reverse_lazy('quotes:quote_list')
+    template_name = 'quotes/quotes_create.html'
+    success_url = reverse_lazy('quotes:quotes_list')
+
+class QuoteDetailView(DetailView):
+    model = Quote
+    template_name = 'quotes/quotes_detail.html'
+    context_object_name = 'quote'
 
 class QuoteUpdateView(UpdateView):
     model = Quote
     form_class = QuoteForm
-    template_name = 'quotes/quote_create.html'
+    template_name = 'quotes/quotes_create.html'
 
-    success_url = reverse_lazy('quotes:quote_list')
+    success_url = reverse_lazy('quotes:quotes_list')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -42,8 +48,8 @@ class QuoteUpdateView(UpdateView):
 
 class QuoteDeleteView(DeleteView):
     model = Quote
-    template_name = 'quotes/quote_confirm_delete.html'
-    success_url = reverse_lazy('quotes:quote_list')
+    template_name = 'quotes/quotes_confirm_delete.html'
+    success_url = reverse_lazy('quotes:quotes_list')
 
 def generate_pdf(request, quote_id):
     BASE_DIR = settings.BASE_DIR

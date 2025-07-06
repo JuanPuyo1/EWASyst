@@ -66,8 +66,8 @@ class DashboardView(LoginRequiredMixin, View):
         invoice_dates = [i['month'] for i in invoice_counts]
         invoice_values = [i['count'] for i in invoice_counts]
 
-        quotes_trace = go.Bar(x=quote_dates, y=quote_values, name='Quotes')
-        invoices_trace = go.Bar(x=invoice_dates, y=invoice_values, name='Invoices')
+        quotes_trace = go.Bar(x=quote_dates, y=quote_values, name='Cotizaciones')
+        invoices_trace = go.Bar(x=invoice_dates, y=invoice_values, name='Facturas')
         quotes_vs_invoices_fig = go.Figure(data=[quotes_trace, invoices_trace])
         quotes_vs_invoices_fig.update_layout(barmode='group', title='Cotizaciones vs Facturas sobre el tiempo')
         quotes_vs_invoices_div = opy.plot(quotes_vs_invoices_fig, auto_open=False, output_type='div')

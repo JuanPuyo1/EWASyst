@@ -22,6 +22,8 @@ Facturas
 
 <h1>Facturas</h1>
 
+{% include "includes/search.html" %}
+
 <button onclick="window.location.href='{% url 'invoices:invoices_create' %}'">Crear Factura</button>
 
 
@@ -35,9 +37,12 @@ Facturas
     <thead>
         <tr>
             <th>Número</th>
+            <th>Estado</th>
             <th>Cliente</th>
             <th>Fecha</th>
             <th>Total</th>
+            <th>Abono</th>
+            <th>Restante</th>
             <th>Tipo</th>
             <th>Acciones</th>
         </tr>
@@ -46,15 +51,27 @@ Facturas
         {% for invoice in invoices %}
             <tr>
                 <td>{{ invoice.invoice_number }}</td>
+                <td style="background-color: {% if invoice.invoice_status == 'Pendiente de Pago' %}#f6bf88{% elif invoice.invoice_status == 'Pagado' %}#d1f688{% else %}#f68888{% endif %};">
+                    {{ invoice.invoice_status }}</td>
                 <td>{{ invoice.client.name }}</td>
                 <td>{{ invoice.invoice_date }}</td>
-                <td>{{ invoice.invoice_total }}</td>
+                <td>COP {{ invoice.invoice_total|floatformat:0 }}</td>
+                <td>COP {{ invoice.invoice_balance|floatformat:0 }}</td>
+                <td>COP {{ invoice.restante|floatformat:0 }}</td>
                 <td>{{ invoice.invoice_type }}</td>
                 <td>
-                    <a href="">Ver</a>
-                    <a href="">Editar</a>
-                    <a href="{% url 'invoices:invoices_confirm_delete' invoice.id %}">Eliminar</a>
-                    <a href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">Generar PDF</a>
+                    <a href="{% url 'invoices:invoices_detail' invoice.id %}">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{% url 'invoices:invoices_update' invoice.id %}">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{% url 'invoices:invoices_delete' invoice.id %}">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                    <a href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">
+                        <i class="bi bi-file-earmark-pdf"></i>
+                    </a>
                 </td>
             </tr>
         {% endfor %}
@@ -69,30 +86,4 @@ Facturas
 
 {% endblock %}
 
-{% block extra_scripts %}
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const invoiceType = document.getElementById('invoice_type');
-        invoiceType.addEventListener('change', function() {
-            const invoiceType = document.getElementById('invoice_type').value;
-            
-            switch (invoiceType) {
-                case 'item':
-                    window.location.href = '{% url 'invoices:invoices_list' %}?invoice_type=item';
-                    break;
-                case 'customized':
-                    window.location.href = '{% url 'invoices:invoices_list' %}?invoice_type=customized';
-                    break;
-                case 'maintenance':
-                    window.location.href = '{% url 'invoices:invoices_list' %}?invoice_type=maintenance';
-                    break;
-                default:
-                    window.location.href = '{% url 'invoices:invoices_list' %}';
-            }
-        });
-    });
-    </script>
-
-
-{% endblock %}
 

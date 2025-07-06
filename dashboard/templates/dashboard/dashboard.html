@@ -10,16 +10,16 @@ Dashboard
 <section>
 <div class="grid">
             <article>
-                clientes {{ total_clients }}
+                Clientes {{ total_clients }}
             </article>
             <article>
-                cotizaciones {{ total_quotes }}
+                Cotizaciones {{ total_quotes }}
             </article>
             <article>
-                facturas {{ total_invoices }}
+                Facturas {{ total_invoices }}
             </article>
             <article>
-                inventarios ${{ total_inventory|default:"0" }}
+                Inventarios ${{ total_inventory|default:"0" }}
             </article>
 </div>
 </section>
@@ -29,12 +29,12 @@ Dashboard
 <div class="grid">
     <div>
         <article>
-            <h4>Facturas Recientes</h4>
+            <header>Facturas Recientes</header>
             
             {% if recent_invoices %}
             
                 {% for invoice in recent_invoices %}
-                <li>{{ invoice.client.name }} - {{ invoice.invoice_total }}</li>
+                <li href="{% url 'invoices:invoices_detail' invoice.id %}">{{ invoice.client.name }} - {{ invoice.invoice_total }}</li>
                 {% endfor %}
             
             {% else %}
@@ -46,13 +46,13 @@ Dashboard
         <article>
             <header>Cotizaciones Recientes</header>
             {% if recent_quotes %}
-            <ul>
+            
                 {% for quote in recent_quotes %}
-                <li>{{ quote.client.name }} - {{ quote.quote_total }}</li>
+                <li href="{% url 'quotes:quotes_detail' quote.id %}">{{ quote.client.name }} - {{ quote.quote_total }}</li>
                 {% endfor %}
-            </ul>
+            
             {% else %}
-            <p>No hay cotizaciones recientes</p>
+            <p style="font-size: 1.2rem;">No hay cotizaciones recientes</p>
             {% endif %}
           </article>
     </div>
@@ -67,7 +67,7 @@ Dashboard
                 <li>{{ client.name }}</li>
                 {% endfor %}
             {% else %}
-            <p>No hay clientes registrados</p>
+            <p style="font-size: 1rem; font-weight: 200;">No hay clientes registrados</p>
             {% endif %}
           </article>
     </div>
@@ -79,11 +79,25 @@ Dashboard
                 <li>{{ inventory.name }} - {{ inventory.quantity }}</li>
                 {% endfor %}
             {% else %}
-            <p> No hay inventarios registrados </p>
+            <p style="font-size: 1rem; font-weight: 200;"> No hay inventarios registrados </p>
             {% endif %}
           </article>
     </div>
 </div>
+</section>
+
+<section>
+    <div class="grid">
+         <article id="create-quote" style="cursor: pointer;">
+            <a>Crear Nueva Cotización</a>
+         </article>
+         <article id="create-invoice" style="cursor: pointer;">
+            <a>Crear Nueva Factura</a>
+         </article>
+         <article id="create-inventory" style="cursor: pointer;">
+            <a>Añadir Inventario</a>
+         </article>
+    </div>
 </section>
 
 <section>
@@ -108,4 +122,20 @@ Dashboard
     {{ revenue_div|safe }}
 </div>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('create-quote').addEventListener('click', function() {
+            window.location.href = '{% url 'quotes:quotes_create' %}';
+        });
+        document.getElementById('create-invoice').addEventListener('click', function() {
+            window.location.href = '{% url 'invoices:invoices_create' %}';
+        });
+        document.getElementById('create-inventory').addEventListener('click', function() {
+            window.location.href = '{% url 'inventories:inventories_create' %}';
+        });
+    });
+</script>
 {% endblock %}

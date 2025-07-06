@@ -4,7 +4,9 @@ from .models import Invoice
 from .forms import InvoiceForm
 from django.db.models import QuerySet
 from django.urls import reverse_lazy
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import DeleteView, UpdateView
+from django.contrib import messages
+from django.views.generic import DetailView
 # Create your views here.
 
 #Generar PDF
@@ -19,7 +21,12 @@ from reportlab.lib.utils import simpleSplit
 class InvoicesListView(View):
     def get(self, request):
         invoices = Invoice.objects.all()
-        context = {
+
+        # Calculate restante for each invoice and add it to the context
+        for invoice in invoices:
+            invoice.restante = invoice.invoice_total - invoice.invoice_balance
+
+        context = { 
             'invoices': invoices,
         }
         return render(request, 'invoices/invoices_list.html', context)
@@ -74,6 +81,27 @@ class InvoicesCreate(View):
         else:
             print(form.errors)
             return redirect('invoices:invoices_create')
+        
+
+class InvoicesDetailView(DetailView):
+    model = Invoice
+    template_name = 'invoices/invoices_detail.html'
+    context_object_name = 'invoice'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['restante'] = context['invoice'].invoice_total - context['invoice'].invoice_balance
+        return context
+
+
+
+
+class InvoicesUpdate(UpdateView):
+    model = Invoice
+    template_name = 'invoices/invoices_update.html'
+    context_object_name = 'invoice'
+    form_class = InvoiceForm
+
 
 def generate_pdf_item(request, invoice_id):
     BASE_DIR = settings.BASE_DIR
@@ -253,16 +281,18 @@ class InvoicesCreateForCustomizedView(View):
             return redirect('invoices:invoices_create_for_customized')
 
 def invoices_delete(request, pk):
-    invoice = get_object_or_404(InvoiceForItem, pk=pk)
-    if invoice:
-        invoice.delete()
-    else:
-        invoice = get_object_or_404(InvoiceForMaintenance, pk=pk)
+    try:
+        invoice = get_object_or_404(Invoice, pk=pk)
         if invoice:
             invoice.delete()
-        else:
             return redirect('invoices:invoices_list')
-    return redirect('invoices:invoices_list')
+        else:
+            print("No se encontró la factura")
+            messages.error(request, "No se encontró la factura")
+            return redirect('invoices:invoices_list')
+    except Exception as e:
+        print(e, "Error al eliminar la factura")
+        return redirect('invoices:invoices_list')
 
 
 

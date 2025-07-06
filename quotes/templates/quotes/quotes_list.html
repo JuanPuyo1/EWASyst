@@ -8,8 +8,7 @@
 <nav aria-label="breadcrumb">
     <ul>
        <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
-      <li><a href="{% url 'quotes:quote_list' %}">Cotizaciones</a></li>
-      <li>Listado de Cotizaciones</li>
+       <li>Cotizaciones</li>
     </ul>
   </nav>
 {% endblock %}
@@ -21,7 +20,7 @@
 
 {% include 'includes/search.html' %}
 
-<button onclick="window.location.href='{% url 'quotes:quote_create' %}'" class="btn btn-primary">Crear Cotización</button>
+<button onclick="window.location.href='{% url 'quotes:quotes_create' %}'" class="btn btn-primary">Crear Cotización</button>
 
 <div class="overflow-auto" >
 <table class="table" id="myTable">
@@ -42,10 +41,12 @@
             <td>{{ quote.quote_date }}</td>
             <td>{{ quote.client.name }}</td>
             <td>{{ quote.quote_product_type }}</td>
-            <td>{{ quote.quote_total }}</td>
+            <td>{{ quote.quote_total|floatformat:0 }}</td>
             <td>
                 
-                    
+                    <a href="{% url 'quotes:quotes_detail' quote.id %}">
+                        <i class="bi bi-eye"></i>
+                    </a>
                     <a href="{% url 'quotes:generate_pdf' quote.id %}">
                         <i class="bi bi-file-earmark-pdf"></i>
                     </a>
@@ -53,10 +54,10 @@
                     <a href="{% url 'quotes:create_invoice' quote.id %}">
                         <i class="bi bi-arrow-up-right"></i>
                     </a>
-                    <a href="{% url 'quotes:quote_update' quote.id %}">
+                    <a href="{% url 'quotes:quotes_update' quote.id %}">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <a href="{% url 'quotes:quote_delete' quote.id %}">
+                    <a href="{% url 'quotes:quotes_delete' quote.id %}">
                         <i class="bi bi-trash"></i>
                     </a>
                 

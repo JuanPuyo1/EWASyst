@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detalle de la Cotización
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+       <li><a href="{% url 'quotes:quotes_list' %}">Cotizaciones</a></li>
+       <li>Detalle de la Cotización {{ quote.quote_number }}</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+
+{% block content %}
+
+<h1>Detalle de la Cotización {{ quote.quote_number }}</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="{% url 'quotes:quotes_update' quote.id %}" class="btn btn-primary">Editar</a>
+    </div>
+    <div class="col-md-6">
+        <a href="{% url 'quotes:quotes_delete' quote.id %}" class="btn btn-danger">Eliminar</a>
+    </div>
+</div>
+<p>Fecha de creación: {{ quote.created_at }}</p>
+
+<p>Número de Cotización: {{ quote.quote_number }}</p>
+<p>Estado: {{ quote.quote_status }}</p>
+<p>Cliente: {{ quote.client.name }}</p>
+<p>Fecha: {{ quote.quote_date }}</p>
+<p>Total: {{ quote.quote_total }}</p>
+<p>Tipo: {{ quote.quote_type }}</p>
+<p>Descripción: {{ quote.description }}</p>
+<p>Notas: {{ quote.observation }}</p>
+
+{% endblock %}
