@@ -5,6 +5,8 @@ from django.core.validators import RegexValidator
 # Create your models here.
 
 class Client(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
     name = models.CharField(max_length=100, null=False, blank=False, validators=[MinLengthValidator(3)])
     email = models.EmailField(null=True, blank=True, validators=[EmailValidator])
     phone = models.CharField(max_length=15, null=True, blank=True, validators=[MinLengthValidator(10), RegexValidator(r'^\d{10}$')])

@@ -16,6 +16,8 @@ class Quote(models.Model):
         # Format: EWA001, EWA002, etc.
         return f'EWA{next_number:03d}'
 
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    
     quote_number = models.CharField(
         max_length=100, 
         unique=True, 

@@ -5,19 +5,55 @@ Dashboard
 {% endblock %}
 
 {% block content %}
-<h1>Dashboard</h1>
+<h1>Bienvenido, {{ user.username }}</h1>
 
+<section>
+<div class="grid">
+            <article>
+                clientes {{ total_clients }}
+            </article>
+            <article>
+                cotizaciones {{ total_quotes }}
+            </article>
+            <article>
+                facturas {{ total_invoices }}
+            </article>
+            <article>
+                inventarios ${{ total_inventory|default:"0" }}
+            </article>
+</div>
+</section>
+
+<section>
+    <h3>Actividad</h3>
 <div class="grid">
     <div>
         <article>
-            <header>Resumen de Facturas</header>
-            <p>Total de Facturas: {{ total_invoices }}</p>
+            <h4>Facturas Recientes</h4>
+            
+            {% if recent_invoices %}
+            
+                {% for invoice in recent_invoices %}
+                <li>{{ invoice.client.name }} - {{ invoice.invoice_total }}</li>
+                {% endfor %}
+            
+            {% else %}
+            <p>No hay facturas recientes</p>
+            {% endif %}
           </article>
     </div>
     <div>
         <article>
-            <header>Resumen de Cotizaciones</header>
-            <p>Resumen de Cotizaciones</p>
+            <header>Cotizaciones Recientes</header>
+            {% if recent_quotes %}
+            <ul>
+                {% for quote in recent_quotes %}
+                <li>{{ quote.client.name }} - {{ quote.quote_total }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No hay cotizaciones recientes</p>
+            {% endif %}
           </article>
     </div>
 </div>
@@ -25,15 +61,51 @@ Dashboard
 <div class="grid">
     <div>
         <article>
-            <header>Clientes</header>
-            <p>Clientes registrados</p>
+            <header>Clientes</header> 
+            {% if clients %}
+                {% for client in clients %}
+                <li>{{ client.name }}</li>
+                {% endfor %}
+            {% else %}
+            <p>No hay clientes registrados</p>
+            {% endif %}
           </article>
     </div>
     <div>
         <article>
             <header>Inventarios</header>
-            <p>Resumen de Cotizaciones</p>
+            {% if inventories %}
+                {% for inventory in inventories %}
+                <li>{{ inventory.name }} - {{ inventory.quantity }}</li>
+                {% endfor %}
+            {% else %}
+            <p> No hay inventarios registrados </p>
+            {% endif %}
           </article>
     </div>
 </div>
+</section>
+
+<section>
+<div>
+    <h3>Cotizaciones vs Facturas sobre el tiempo</h3>
+    {{ quotes_vs_invoices_div|safe }}
+</div>
+{% if inventories.count > 0 %}
+<div>
+    <h3>Distribución de Inventarios</h3>
+    {{ inventory_div|safe }}
+</div>
+{% else %}
+<div>
+    <h3>Distribución de Inventarios</h3>
+    <p>No hay inventarios registrados</p>
+</div>
+{% endif %}
+
+<div>
+    <h3>Tendencias de Ingresos</h3>
+    {{ revenue_div|safe }}
+</div>
+
 {% endblock %}
