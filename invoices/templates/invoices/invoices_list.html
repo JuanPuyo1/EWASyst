@@ -60,16 +60,16 @@ Facturas
                 <td>COP {{ invoice.restante|floatformat:0 }}</td>
                 <td>{{ invoice.invoice_type }}</td>
                 <td>
-                    <a href="{% url 'invoices:invoices_detail' invoice.id %}">
+                    <a class="observation-option" href="{% url 'invoices:invoices_detail' invoice.id %}">
                         <i class="bi bi-eye"></i>
                     </a>
-                    <a href="{% url 'invoices:invoices_update' invoice.id %}">
+                    <a class="edit-option" href="{% url 'invoices:invoices_update' invoice.id %}">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <a href="{% url 'invoices:invoices_delete' invoice.id %}">
+                    <a class="delete-option" href="{% url 'invoices:invoices_delete' invoice.id %}">
                         <i class="bi bi-trash"></i>
                     </a>
-                    <a href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">
+                    <a class="generate-option" href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">
                         <i class="bi bi-file-earmark-pdf"></i>
                     </a>
                 </td>

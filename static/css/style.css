@@ -35,6 +35,12 @@ button{
     border: none;
 }
 
+.btn-danger{
+    background-color: #c2757c;
+    color: white;
+    border: none;
+}
+
 .logo-img{
     width: 100px;
     height: 100px;
@@ -152,6 +158,14 @@ section article header {
 
 .edit-option{
     color: #66a549;
+}
+
+.generate-option{
+    color: #007bff;
+}
+
+.observation-option{
+    color: #6c757d;
 }
 
 .delete-option{
