@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, DeleteView
+from django.views.generic import UpdateView, DeleteView, ListView
 from .forms import InventoryForm
 from .models import Inventory
 
 # Create your views here.
-class InventoriesListView(View):
-    def get(self, request):
-        return render(request, 'inventories/inventories_list.html')
+class InventoriesListView(ListView):
+    model = Inventory
+    template_name = 'inventories/inventories_list.html'
+    context_object_name = 'inventories'
 
 class InventoriesCreateView(View):
     def get(self, request):

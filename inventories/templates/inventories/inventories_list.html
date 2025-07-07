@@ -15,6 +15,9 @@
 
 {% block content %}
 <h1>Inventarios</h1>
+
+{% include 'includes/search.html' %}
+
 <button onclick="window.location.href='{% url 'inventories:inventories_create' %}'">Crear Inventario</button>
 <table>
     <thead>
@@ -34,8 +37,12 @@
             <td>{{ inventory.price }}</td>
             <td>{{ inventory.stock }}</td>
             <td>
-                <button onclick="window.location.href='{% url 'inventories:inventories_update' inventory.id %}'">Editar</button>
-                <button onclick="window.location.href='{% url 'inventories:inventories_delete' inventory.id %}'">Eliminar</button>
+                <a class="edit-option" href="{% url 'inventories:inventories_update' inventory.id %}">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <a class="delete-option" href="{% url 'inventories:inventories_delete' inventory.id %}">
+                    <i class="bi bi-trash"></i>
+                </a>
             </td>
         </tr>
         {% endfor %}

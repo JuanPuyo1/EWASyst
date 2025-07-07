@@ -30,10 +30,11 @@ class DashboardView(LoginRequiredMixin, View):
         total_invoices = (
             Invoice.objects.count()
         )
-
+        inventories = Inventory.objects.all()
         # Count all types of inventory
         try:
             total_inventory = Inventory.objects.aggregate(Sum('price'))['price__sum']
+            print(total_inventory)
         except:
             total_inventory = 0
 
@@ -74,6 +75,7 @@ class DashboardView(LoginRequiredMixin, View):
 
         # Inventory Distribution (by name for now)
         inventory = Inventory.objects.values('name').annotate(total=Sum('price'))
+        print(inventory)
         inventory_labels = [item['name'] for item in inventory]
         inventory_values = [item['total'] for item in inventory]
         inventory_fig = go.Figure(data=[go.Pie(labels=inventory_labels, values=inventory_values)])
@@ -108,6 +110,7 @@ class DashboardView(LoginRequiredMixin, View):
             'quotes_vs_invoices_div': quotes_vs_invoices_div,
             'inventory_div': inventory_div,
             'revenue_div': revenue_div,
+            'inventories': inventories,
         }
 
         return render(request, 'dashboard/dashboard.html', context)

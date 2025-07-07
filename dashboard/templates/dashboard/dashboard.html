@@ -62,8 +62,8 @@ Dashboard
     <div>
         <article>
             <header>Clientes</header> 
-            {% if clients %}
-                {% for client in clients %}
+            {% if recent_clients %}
+                {% for client in recent_clients %}
                 <li>{{ client.name }}</li>
                 {% endfor %}
             {% else %}
@@ -76,7 +76,7 @@ Dashboard
             <header>Inventarios</header>
             {% if inventories %}
                 {% for inventory in inventories %}
-                <li>{{ inventory.name }} - {{ inventory.quantity }}</li>
+                <li>{{ inventory.name }} - {{ inventory.price }}</li>
                 {% endfor %}
             {% else %}
             <p style="font-size: 1rem; font-weight: 200;"> No hay inventarios registrados </p>

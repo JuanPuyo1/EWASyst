@@ -150,3 +150,10 @@ section article header {
     font-size: 1.2em;
 }
 
+.edit-option{
+    color: #66a549;
+}
+
+.delete-option{
+    color: #dc3545;
+}
