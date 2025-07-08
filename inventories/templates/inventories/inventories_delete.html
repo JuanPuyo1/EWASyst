@@ -23,6 +23,9 @@
 <p aria-readonly="true">Stock: {{ inventory.stock }}</p>
 <form method="post">
     {% csrf_token %}
-    <button type="submit">Eliminar</button>
+    <div role="group">
+        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'inventories:inventories_list' %}'">Cancelar</button>
+    </div>
 </form>
 {% endblock %}

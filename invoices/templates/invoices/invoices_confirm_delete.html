@@ -24,7 +24,9 @@
 <p>Total de Factura: {{ invoice.invoice_total }}</p>
 <form method="post">
     {% csrf_token %}
-    <button type="submit">Eliminar</button>
-    <a href="{% url 'invoices:invoices_list' %}">Cancelar</a>
+    <div role="group">
+        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'invoices:invoices_list' %}'">Cancelar</button>
+    </div>
 </form>
 {% endblock %}

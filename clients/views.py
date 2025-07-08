@@ -34,9 +34,9 @@ class ClientsUpdateView(UpdateView):
     template_name = 'clients/clients_update.html'
     success_url = reverse_lazy('clients:clients_list')
 
-def clients_delete(request, pk):
-    client = Client.objects.get(id=pk)
-    client.delete()
-    return redirect('clients:clients_list')
+class ClientsDeleteView(DeleteView):
+    model = Client
+    template_name = 'clients/client_delete.html'
+    success_url = reverse_lazy('clients:clients_list')
     
 

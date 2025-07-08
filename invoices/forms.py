@@ -1,7 +1,7 @@
 
 from django import forms
 from .models import Invoice
-
+from datetime import datetime, timedelta
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
@@ -21,13 +21,14 @@ class InvoiceForm(forms.ModelForm):
         }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
-            'invoice_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'invoice_number': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
             'invoice_type': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'invoice_status': forms.TextInput(attrs={'class': 'form-control'}),
+            'invoice_status': forms.Select(attrs={'class': 'form-control'}),
             'observation': forms.Textarea(attrs={'class': 'form-control'}),
             'invoice_quantity': forms.TextInput(attrs={'class': 'form-control'}),
             'additional_notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Anillo como parte de pago?, etc.'}),
             'invoice_total': forms.TextInput(attrs={'class': 'form-control'}),
             'invoice_balance': forms.TextInput(attrs={'class': 'form-control'}),
         }
+

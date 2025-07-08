@@ -24,12 +24,12 @@
 {% include 'includes/search_by_name.html' %}
 
 <button class="btn btn-primary" onclick="window.location.href='{% url 'clients:clients_create' 'false' %}'">
-    Anadir Cliente
+    Añadir Cliente
 </button>
 
 
 <div class="overflow-auto">
-<table id="myTable">
+  <table id="myTable">
     <thead>
         <tr>
             <th>Nombre</th>
@@ -38,61 +38,32 @@
             <th>Acciones</th>
         </tr>
     </thead>
+      
     <tbody>
         {% for client in clients %}
             <tr>
-                <td>{{ client.name }}</td>
-                <td>{{ client.phone }}</td>
-                <td>{{ client.email }}</td>
+                <td>
+                  {{ client.name }}
+                </td>
+                <td>
+                  {{ client.phone }}
+                </td>
+                <td>
+                  {{ client.email }}
+                </td>
                 <td>
                     <a class="edit-option" href="{% url 'clients:clients_update' client.id %}">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <a class="delete-option" data-target="modal-example" onclick="toggleModal(event)">
+                    <a class="delete-option" href="{% url 'clients:clients_delete' client.id %}">
                         <i class="bi bi-trash"></i>
                     </a>
                 </td>
             </tr>
-        
+        {% endfor %}
     </tbody>
 </table>
 </div>
-<dialog id="modal-example">
-    <article>
-      <header>
-        <button
-          aria-label="Close"
-          rel="prev"
-          data-target="modal-example"
-          onclick="toggleModal(event)"
-        ></button>
-        <h2>¿Está seguro de eliminar este cliente?</h2>
-      </header>
-      <p>
-        Datos del cliente:
-        <br>
-        <strong>Nombre:</strong> {{ client.name }}
-        <br>
-        <strong>Teléfono:</strong> {{ client.phone }}
-        <br>
-        <strong>Email:</strong> {{ client.email }}
-      </p>
-      <footer>
-        <button
-          role="button"
-          class="secondary"
-          data-target="modal-example"
-          onclick="toggleModal(event)"
-        >
-          Cancelar
-        </button>
-        <button class="btn btn-danger" autofocus onclick="window.location.href='{% url 'clients:clients_delete' 0 %}.replace(0, client.id)'">
-          Confirmar
-        </button>
-      </footer>
-    </article>
-  </dialog>
-  {% endfor %}
 {% endblock %}
 
 {% block extra_scripts %}

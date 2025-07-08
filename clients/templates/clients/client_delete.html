@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Eliminar Cliente
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ul>
+       <li><a href="{% url 'dashboard:dashboard' %}">Inicio</a></li>
+      <li><a href="{% url 'clients:clients_list' %}">Clientes</a></li>
+      <li>Eliminar Cliente</li>
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>Eliminar Cliente</h1>
+<p>¿Está seguro de eliminar este cliente?</p>
+<p>Nombre: {{ client.name }}</p>
+<p>Teléfono: {{ client.phone }}</p>
+<p>Email: {{ client.email }}</p>
+<form method="post">
+    {% csrf_token %}
+    <div role="group">
+        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'clients:clients_list' %}'">Cancelar</button>
+    </div>
+</form>
+{% endblock %}
+

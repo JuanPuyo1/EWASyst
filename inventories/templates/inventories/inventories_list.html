@@ -16,7 +16,7 @@
 {% block content %}
 <h1>Inventarios</h1>
 
-{% include 'includes/search.html' %}
+{% include 'includes/search_by_description.html' %}
 
 <button onclick="window.location.href='{% url 'inventories:inventories_create' %}'">Crear Inventario</button>
 <table>

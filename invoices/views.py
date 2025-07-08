@@ -32,32 +32,10 @@ class InvoicesListView(View):
         return render(request, 'invoices/invoices_list.html', context)
 
 
-class InvoicesConfirmDeleteView(View):
+class InvoicesConfirmDeleteView(DeleteView):
+    model = Invoice
     template_name = 'invoices/invoices_confirm_delete.html'
-    
-    def get(self, request, *args, **kwargs):
-
-        try:
-            invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
-
-            if invoice:
-                return render(request, self.template_name, {'invoice': invoice})
-        except Exception as e:
-            print(e, "Error al obtener la factura")
-            return redirect('invoices:invoices_list')
-    
-    def post(self, request, *args, **kwargs):
-        try:
-            invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
-            if invoice:
-                invoice.delete()
-                return redirect('invoices:invoices_list')
-            else:
-                print("No se encontró la factura")
-                return redirect('invoices:invoices_list')
-        except Exception as e:
-            print(e, "Error al eliminar la factura")
-            return redirect('invoices:invoices_list')
+    success_url = reverse_lazy('invoices:invoices_list')
 
 class InvoicesCreate(View):
     def get(self, request):
@@ -245,54 +223,6 @@ def generate_pdf_item(request, invoice_id):
     return response
 
 
-
-class InvoicesCreateForCustomizedView(View):
-    def get(self, request):
-        initial_data = request.session.pop('invoice_initial_data', None)
-        if initial_data:
-            form = InvoiceForCustomizedForm(initial=initial_data)
-        else:
-            form = InvoiceForCustomizedForm()
-    
-        request.session['invoice_initial_data'] = None
-        return render(request, 'invoices/invoices_create_custom.html', {'form': form})
-
-    def post(self, request):
-        print(request.POST)
-        form = InvoiceForCustomizedForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            invoice = InvoiceForCustomized.objects.create(
-                client=form.cleaned_data['client'],
-                invoice_number=form.cleaned_data['invoice_number'],
-                invoice_type=form.cleaned_data['invoice_type'],
-                invoice_date=form.cleaned_data['invoice_date'],
-                invoice_status=form.cleaned_data['invoice_status'],
-                description=form.cleaned_data['description'],
-                observation=form.cleaned_data['observation'],
-                invoice_total=form.cleaned_data['invoice_total'],
-                invoice_balance=form.cleaned_data['invoice_balance']
-            )
-            invoice.save()
-
-            return redirect('invoices:invoices_list')
-        else:
-            print(form.errors)
-            return redirect('invoices:invoices_create_for_customized')
-
-def invoices_delete(request, pk):
-    try:
-        invoice = get_object_or_404(Invoice, pk=pk)
-        if invoice:
-            invoice.delete()
-            return redirect('invoices:invoices_list')
-        else:
-            print("No se encontró la factura")
-            messages.error(request, "No se encontró la factura")
-            return redirect('invoices:invoices_list')
-    except Exception as e:
-        print(e, "Error al eliminar la factura")
-        return redirect('invoices:invoices_list')
 
 
 
