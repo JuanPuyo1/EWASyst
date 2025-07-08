@@ -103,7 +103,9 @@ Dashboard
 <section>
 <div>
     <h3>Cotizaciones vs Facturas sobre el tiempo</h3>
-    {{ quotes_vs_invoices_div|safe }}
+    
+        {{ quotes_vs_invoices_div|safe }}
+    
 </div>
 {% if inventories.count > 0 %}
 <div>
