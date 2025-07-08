@@ -7,6 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib import messages
 from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 #Generar PDF
@@ -18,7 +20,7 @@ from django.conf import settings
 from reportlab.lib.utils import simpleSplit
 # Create your views here.
 
-class InvoicesListView(View):
+class InvoicesListView(LoginRequiredMixin, View):
     def get(self, request):
         invoices = Invoice.objects.all()
 
@@ -32,12 +34,12 @@ class InvoicesListView(View):
         return render(request, 'invoices/invoices_list.html', context)
 
 
-class InvoicesConfirmDeleteView(DeleteView):
+class InvoicesConfirmDeleteView(LoginRequiredMixin, DeleteView):
     model = Invoice
     template_name = 'invoices/invoices_confirm_delete.html'
     success_url = reverse_lazy('invoices:invoices_list')
 
-class InvoicesCreate(View):
+class InvoicesCreate(LoginRequiredMixin, View):
     def get(self, request):
 
         initial_data = request.session.pop('invoice_initial_data', None)
@@ -61,7 +63,7 @@ class InvoicesCreate(View):
             return redirect('invoices:invoices_create')
         
 
-class InvoicesDetailView(DetailView):
+class InvoicesDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
     template_name = 'invoices/invoices_detail.html'
     context_object_name = 'invoice'
@@ -74,13 +76,13 @@ class InvoicesDetailView(DetailView):
 
 
 
-class InvoicesUpdate(UpdateView):
+class InvoicesUpdate(LoginRequiredMixin, UpdateView):
     model = Invoice
     template_name = 'invoices/invoices_update.html'
     context_object_name = 'invoice'
     form_class = InvoiceForm
 
-
+@login_required
 def generate_pdf_item(request, invoice_id):
     BASE_DIR = settings.BASE_DIR
     # Create buffer and canvas

@@ -8,7 +8,8 @@ from django.views.generic import DetailView
 from invoices.models import Invoice
 from invoices.forms import InvoiceForm
 from django.shortcuts import redirect
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 #Generar PDF
 import io
 from django.http import FileResponse
@@ -18,23 +19,23 @@ from django.conf import settings
 from reportlab.lib.utils import simpleSplit
 # Create your views here.
 
-class QuoteView(ListView):
+class QuoteView(LoginRequiredMixin, ListView):
     model = Quote
     template_name = 'quotes/quotes_list.html'
     context_object_name = 'quotes'
 
-class QuoteCreateView(CreateView):
+class QuoteCreateView(LoginRequiredMixin, CreateView):
     model = Quote
     form_class = QuoteForm
     template_name = 'quotes/quotes_create.html'
     success_url = reverse_lazy('quotes:quotes_list')
 
-class QuoteDetailView(DetailView):
+class QuoteDetailView(LoginRequiredMixin, DetailView):
     model = Quote
     template_name = 'quotes/quotes_detail.html'
     context_object_name = 'quote'
 
-class QuoteUpdateView(UpdateView):
+class QuoteUpdateView(LoginRequiredMixin, UpdateView):
     model = Quote
     form_class = QuoteForm
     template_name = 'quotes/quotes_create.html'
@@ -46,11 +47,12 @@ class QuoteUpdateView(UpdateView):
         context['quote'] = Quote.objects.get(id=self.kwargs['pk'])
         return context
 
-class QuoteDeleteView(DeleteView):
+class QuoteDeleteView(LoginRequiredMixin, DeleteView):
     model = Quote
     template_name = 'quotes/quotes_confirm_delete.html'
     success_url = reverse_lazy('quotes:quotes_list')
 
+@login_required
 def generate_pdf(request, quote_id):
     BASE_DIR = settings.BASE_DIR
     # Create buffer and canvas
