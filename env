@@ -1,0 +1,5 @@
+SECRET_KEY = 'django-insecure-o3%vix1j4bvbdq)hei6qqwau6d)38vya1u^ppk4^v9-08ld*t+'
+DEBUG = True
+DJANGO_ALLOWED_HOSTS = ['*']
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False

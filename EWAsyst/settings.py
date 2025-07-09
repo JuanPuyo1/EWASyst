@@ -11,21 +11,25 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o3%vix1j4bvbdq)hei6qqwau6d)38vya1u^ppk4^v9-08ld*t+'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","127.0.0.1").split(",")
 
 
 # Application definition
@@ -137,3 +141,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 USE_THOUSAND_SEPARATOR = True
 LANGUAGE_CODE = 'es-co'
+
+CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE")
+
+SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE")
+
+
