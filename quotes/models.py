@@ -44,7 +44,7 @@ class Quote(models.Model):
 
     quote_discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     quote_discount_description = models.CharField(max_length=100, null=True, blank=True)
-    
+    email_sent = models.BooleanField(null=True, blank=True, default=False)
     def __str__(self):
         return self.quote_number
 

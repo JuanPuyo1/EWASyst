@@ -37,7 +37,7 @@ class Invoice(models.Model):
     additional_notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
+    email_sent = models.BooleanField(null=True, blank=True, default=False)
 
     def __str__(self):
         return f"Factura {self.pk}"

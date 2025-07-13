@@ -172,6 +172,10 @@ section article header {
     color: #dc3545;
 }
 
+.send-email-option{
+    color: #007bff;
+}
+
 .form-control[readonly]{
     background-color: #e4e8eca2;
     color: #6c757d;

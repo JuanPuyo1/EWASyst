@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import Quote
 from .forms import QuoteForm
-from django.urls import reverse_lazy
-from django.views.generic import ListView
+from django.urls import reverse_lazy, reverse
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import ListView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from invoices.models import Invoice
@@ -10,6 +12,7 @@ from invoices.forms import InvoiceForm
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 #Generar PDF
 import io
 from django.http import FileResponse
@@ -217,5 +220,63 @@ def create_invoice(request, quote_id):
     }
 
     return redirect('invoices:invoices_create')
+
+
+class QuoteConfirmEmailView(LoginRequiredMixin, View):
+    template_name = 'quotes/quotes_confirm_email.html'
+    success_url = reverse_lazy('quotes:quotes_list')
+    def get(self, request, *args, **kwargs):
+        quote = Quote.objects.get(id=kwargs['quote_id'])
+        return render(request, self.template_name, {'quote': quote})
     
+    def post(self, request, *args, **kwargs):
+        try:
+            quote = Quote.objects.get(id=kwargs['quote_id'])
+            send_email_quote(request, quote.id)
+            messages.success(request, 'Cotización enviada correctamente')
+            return redirect(self.success_url)
+        except Exception as e:
+            messages.error(request, f"Error: {e}")
+            return HttpResponse(f"Error: {e}")
+
+def send_email_quote(request, quote_id):
+    quote = Quote.objects.get(id=quote_id)
+    subject = f"Cotización {quote.quote_number}"
+    message_body = f"Cotización {quote.quote_number} ha sido generada"
+    from_email = settings.EMAIL_HOST_USER
+    
+    if subject and message_body and from_email and quote.client.email:
+        try:
+            # Create EmailMessage object
+            email = EmailMessage(
+                subject=subject,
+                body=message_body,
+                from_email=from_email,
+                to=[quote.client.email]
+            )
+            
+            # Generate PDF and attach it
+            pdf_response = generate_pdf(request, quote_id)
+            pdf_content = b''.join(pdf_response.streaming_content)
+            
+            email.attach(
+                filename=f"cotizacion_{quote.quote_number}.pdf",
+                content=pdf_content,
+                mimetype='application/pdf'
+            )
+            
+            # Send the email
+            email.send()
+            quote.email_sent = True
+            quote.save()
+            print("Email sent successfully")
+            return HttpResponseRedirect(reverse('quotes:quotes_list'))
+        except BadHeaderError:
+            print("Invalid header found.")
+            return HttpResponse("Invalid header found.")
+        except Exception as e:
+            print(f"Error sending email: {e}")
+            return HttpResponse(f"Error sending email: {e}")
+    else:
+        return HttpResponse("Make sure all fields are entered and valid.")
 

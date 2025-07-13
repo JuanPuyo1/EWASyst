@@ -18,6 +18,14 @@
 
 <h1>Lista de Cotizaciones</h1>
 
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 {% include 'includes/search.html' %}
 
 <button onclick="window.location.href='{% url 'quotes:quotes_create' %}'" class="btn btn-primary">Crear Cotización</button>
@@ -47,7 +55,7 @@
                     <a class="observation-option" href="{% url 'quotes:quotes_detail' quote.id %}">
                         <i class="bi bi-eye"></i>
                     </a>
-                    <a class="generate-option" href="{% url 'quotes:generate_pdf' quote.id %}">
+                    <a class="generate-option" href="{% url 'quotes:generate_pdf' quote.id %}" target="_blank">
                         <i class="bi bi-file-earmark-pdf"></i>
                     </a>
                     
@@ -59,6 +67,9 @@
                     </a>
                     <a class="delete-option" href="{% url 'quotes:quotes_delete' quote.id %}">
                         <i class="bi bi-trash"></i>
+                    </a>
+                    <a class="send-email-option" href="{% if not quote.email_sent %} {% url 'quotes:confirm_email' quote.id %} {% else %} # {% endif %}">
+                        <i class="bi bi-envelope" style="color: {% if quote.email_sent %} #6c757d {% else %} #007bff {% endif %}"></i>
                     </a>
                 
                 

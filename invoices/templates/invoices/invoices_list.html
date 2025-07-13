@@ -69,8 +69,8 @@ Facturas
                     <a class="delete-option" href="{% url 'invoices:invoices_delete' invoice.id %}">
                         <i class="bi bi-trash"></i>
                     </a>
-                    <a class="generate-option" href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">
-                        <i class="bi bi-file-earmark-pdf"></i>
+                    <a class="generate-option" href="{% if not invoice.email_sent %} {% url 'invoices:generate_pdf_item' invoice.id %} {% else %} # {% endif %}" target="_blank">
+                        <i class="bi bi-file-earmark-pdf" style="color: {% if invoice.email_sent %} #6c757d {% else %} #007bff {% endif %}"></i>
                     </a>
                 </td>
             </tr>

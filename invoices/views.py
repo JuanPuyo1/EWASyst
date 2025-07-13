@@ -3,12 +3,14 @@ from django.views import View
 from .models import Invoice
 from .forms import InvoiceForm
 from django.db.models import QuerySet
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from django.http import HttpResponse, HttpResponseRedirect
 # Create your views here.
 
 #Generar PDF
@@ -224,7 +226,62 @@ def generate_pdf_item(request, invoice_id):
     response["Content-Disposition"] = "inline; filename={}".format(f"factura_{invoice.id}.pdf")
     return response
 
+class InvoiceConfirmEmailView(LoginRequiredMixin, View):
+    template_name = 'invoices/invoice_confirm_email.html'
+    success_url = reverse_lazy('invoices:invoices_list')
+    def get(self, request, *args, **kwargs):
+        invoice = Invoice.objects.get(id=kwargs['invoice_id'])
+        return render(request, self.template_name, {'invoice': invoice})
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            invoice = Invoice.objects.get(id=kwargs['invoice_id'])
+            send_email(request, invoice.id)
+            messages.success(request, 'Factura enviada correctamente')
+            return redirect(self.success_url)
+        except Exception as e:
+            messages.error(request, f"Error: {e}")
+            return HttpResponse(f"Error: {e}")
 
-
+def send_email(request, invoice_id):
+    invoice = Invoice.objects.get(id=invoice_id)
+    subject = f"Factura {invoice.invoice_number}"
+    message_body = f"Factura {invoice.invoice_number} ha sido generada"
+    from_email = settings.EMAIL_HOST_USER
+    
+    if subject and message_body and from_email and invoice.client.email:
+        try:
+            # Create EmailMessage object
+            email = EmailMessage(
+                subject=subject,
+                body=message_body,
+                from_email=from_email,
+                to=[invoice.client.email]
+            )
+            
+            # Generate PDF and attach it
+            pdf_response = generate_pdf_item(request, invoice_id)
+            pdf_content = b''.join(pdf_response.streaming_content)
+            
+            email.attach(
+                filename=f"factura_{invoice.invoice_number}.pdf",
+                content=pdf_content,
+                mimetype='application/pdf'
+            )
+            
+            # Send the email
+            email.send()
+            invoice.email_sent = True
+            invoice.save()
+            print("Email sent successfully")
+            return HttpResponseRedirect(reverse('invoices:invoices_list'))
+        except BadHeaderError:
+            print("Invalid header found.")
+            return HttpResponse("Invalid header found.")
+        except Exception as e:
+            print(f"Error sending email: {e}")
+            return HttpResponse(f"Error sending email: {e}")
+    else:
+        return HttpResponse("Make sure all fields are entered and valid.")
 
 
