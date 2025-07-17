@@ -75,7 +75,7 @@
 
     {% if messages %}
     {% for message in messages %}
-    <article class="message {{ message.tags }}" id="message-{{ forloop.counter }}" style="background-color: {% if message.tags == 'success' %}#d1f688{% elif message.tags == 'error' %}#f68888{% endif %}; color: white;">
+    <article class="message {{ message.tags }}" id="message-{{ forloop.counter }}" style="background-color: {% if message.tags == 'success' %}#d1f688{% elif message.tags == 'error' %}#f68888{% endif %};">
         <span>{{ message }}</span>
         <button class="message-close" onclick="dismissMessage('message-{{ forloop.counter }}')" style="background-color: {% if message.tags == 'success' %}#d1f688{% elif message.tags == 'error' %}#f68888{% endif %};">
             <i class="bi bi-x" style="justify-content: end; background-color: {% if message.tags == 'success' %}#d1f688{% elif message.tags == 'error' %}#f68888{% endif %};"></i>
