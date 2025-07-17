@@ -26,6 +26,7 @@ class QuoteView(LoginRequiredMixin, ListView):
     model = Quote
     template_name = 'quotes/quotes_list.html'
     context_object_name = 'quotes'
+    
 
 class QuoteCreateView(LoginRequiredMixin, CreateView):
     model = Quote
@@ -233,16 +234,16 @@ class QuoteConfirmEmailView(LoginRequiredMixin, View):
         try:
             quote = Quote.objects.get(id=kwargs['quote_id'])
             send_email_quote(request, quote.id)
-            messages.success(request, 'Cotización enviada correctamente')
+            messages.add_message(request, messages.SUCCESS, 'Cotización enviada correctamente')
             return redirect(self.success_url)
         except Exception as e:
-            messages.error(request, f"Error: {e}")
+            messages.add_message(request, messages.ERROR, f"Error: {e}")
             return HttpResponse(f"Error: {e}")
 
 def send_email_quote(request, quote_id):
     quote = Quote.objects.get(id=quote_id)
-    subject = f"Cotización {quote.quote_number}"
-    message_body = f"Cotización {quote.quote_number} ha sido generada"
+    subject = f"Cotización {quote.quote_number} EWA JOYERÍA"
+    message_body = f"Buenas tardes, segun lo solicitado, la cotización {quote.quote_number} ha sido generada"
     from_email = settings.EMAIL_HOST_USER
     
     if subject and message_body and from_email and quote.client.email:

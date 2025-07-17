@@ -28,7 +28,10 @@ class InvoicesListView(LoginRequiredMixin, View):
 
         # Calculate restante for each invoice and add it to the context
         for invoice in invoices:
-            invoice.restante = invoice.invoice_total - invoice.invoice_balance
+            # Handle None values for invoice_total and invoice_balance
+            total = invoice.invoice_total or 0
+            balance = invoice.invoice_balance or 0
+            invoice.restante = total - balance
 
         context = { 
             'invoices': invoices,
@@ -72,17 +75,19 @@ class InvoicesDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['restante'] = context['invoice'].invoice_total - context['invoice'].invoice_balance
+        # Handle None values for invoice_total and invoice_balance
+        total = context['invoice'].invoice_total or 0
+        balance = context['invoice'].invoice_balance or 0
+        context['restante'] = total - balance
         return context
-
-
 
 
 class InvoicesUpdate(LoginRequiredMixin, UpdateView):
     model = Invoice
-    template_name = 'invoices/invoices_update.html'
+    template_name = 'invoices/invoices_create.html'
     context_object_name = 'invoice'
     form_class = InvoiceForm
+    success_url = reverse_lazy('invoices:invoices_list')
 
 @login_required
 def generate_pdf_item(request, invoice_id):
@@ -150,9 +155,10 @@ def generate_pdf_item(request, invoice_id):
             y_position = 750  # Reset to top of new page
     
     # Draw the value, qty, and abono (aligned with first item)
-    p.drawString(300, start_y, f"COP {invoice.invoice_total:,.0f}")
+    total = invoice.invoice_total or 0
+    p.drawString(300, start_y, f"COP {total:,.0f}")
     p.drawString(400, start_y, "1")
-    p.drawString(480, start_y, f"COP {invoice.invoice_total:,.0f}")
+    p.drawString(480, start_y, f"COP {total:,.0f}")
     
     # Adjust y_position for the total section
     y_position -= 20
@@ -165,7 +171,7 @@ def generate_pdf_item(request, invoice_id):
     p.rect(50, y_position, 500, row_height, fill=True)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(400, y_position + 5, "TOTAL")
-    p.drawString(480, y_position + 5, f"COP {invoice.invoice_total:,.0f}")
+    p.drawString(480, y_position + 5, f"COP {total:,.0f}")
     
     # Abono row
     y_position -= row_height
@@ -173,7 +179,8 @@ def generate_pdf_item(request, invoice_id):
     p.rect(50, y_position, 500, row_height, fill=True)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(400, y_position + 5, "ABONO")
-    p.drawString(480, y_position + 5, f"COP {invoice.invoice_balance:,.0f}")
+    balance = invoice.invoice_balance or 0
+    p.drawString(480, y_position + 5, f"COP {balance:,.0f}")
     
     # Restante row
     y_position -= row_height
@@ -181,7 +188,7 @@ def generate_pdf_item(request, invoice_id):
     p.rect(50, y_position, 500, row_height, fill=True)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(400, y_position + 5, "RESTANTE")
-    p.drawString(480, y_position + 5, f"COP {invoice.invoice_total - invoice.invoice_balance:,.0f}")
+    p.drawString(480, y_position + 5, f"COP {total - balance:,.0f}")
     
     # Notes section
     y_position -= 40
@@ -245,8 +252,8 @@ class InvoiceConfirmEmailView(LoginRequiredMixin, View):
 
 def send_email(request, invoice_id):
     invoice = Invoice.objects.get(id=invoice_id)
-    subject = f"Factura {invoice.invoice_number}"
-    message_body = f"Factura {invoice.invoice_number} ha sido generada"
+    subject = f"Factura {invoice.invoice_number} EWA JOYERÍA"
+    message_body = f"Buenas tardes, segun lo solicitado, la factura {invoice.invoice_number} ha sido generada"
     from_email = settings.EMAIL_HOST_USER
     
     if subject and message_body and from_email and invoice.client.email:

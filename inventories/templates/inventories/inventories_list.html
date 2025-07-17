@@ -19,7 +19,8 @@
 {% include 'includes/search_by_description.html' %}
 
 <button onclick="window.location.href='{% url 'inventories:inventories_create' %}'">Crear Inventario</button>
-<table>
+<div class="overflow-auto">
+<table id="myTable">
     <thead>
         <tr>
             <th>Nombre</th>
@@ -46,6 +47,7 @@
             </td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 {% endblock %}
