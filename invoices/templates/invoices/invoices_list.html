@@ -22,7 +22,7 @@ Facturas
 
 <h1>Facturas</h1>
 
-{% include "includes/search.html" %}
+{% include "includes/search_invoice.html" %}
 
 <button onclick="window.location.href='{% url 'invoices:invoices_create' %}'">Crear Factura</button>
 
@@ -33,7 +33,7 @@ Facturas
 
 <h3>Facturas</h3>
 <div class="overflow-auto">
-<table>
+<table id="myTable">
     <thead>
         <tr>
             <th>Número</th>
@@ -72,6 +72,15 @@ Facturas
                     <a class="generate-option" href="{% url 'invoices:generate_pdf_item' invoice.id %}" target="_blank">
                         <i class="bi bi-file-earmark-pdf"></i>
                     </a>
+                    {% if invoice.client.email %}
+                    <a class="send-email-option" href="{% url 'invoices:confirm_email' invoice.id %}">
+                        <i class="bi bi-envelope"></i>
+                    </a>
+                    {% else %}
+                    <a class="send-email-option" href="#">
+                        <i class="bi bi-envelope"></i>
+                    </a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
@@ -86,4 +95,8 @@ Facturas
 
 {% endblock %}
 
+{% block extra_scripts %}
+    
 
+
+{% endblock %}

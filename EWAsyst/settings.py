@@ -11,9 +11,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+<<<<<<< HEAD
 import os
 
 
+=======
+from dotenv import load_dotenv
+import os
+load_dotenv()
+>>>>>>> master
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -155,3 +161,10 @@ CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE")
 SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE")
 
 
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Or your SMTP server
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True 
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'ewajoyeria1@gmail.com')  # Your email
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your email password or app password

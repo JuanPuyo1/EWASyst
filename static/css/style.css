@@ -172,6 +172,10 @@ section article header {
     color: #dc3545;
 }
 
+.send-email-option{
+    color: #007bff;
+}
+
 .form-control[readonly]{
     background-color: #e4e8eca2;
     color: #6c757d;
@@ -180,4 +184,24 @@ section article header {
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
+}
+
+.message{
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.message-close{
+    background-color: #f68888;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    cursor: pointer;
 }

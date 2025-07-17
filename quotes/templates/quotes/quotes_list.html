@@ -47,7 +47,7 @@
                     <a class="observation-option" href="{% url 'quotes:quotes_detail' quote.id %}">
                         <i class="bi bi-eye"></i>
                     </a>
-                    <a class="generate-option" href="{% url 'quotes:generate_pdf' quote.id %}">
+                    <a class="generate-option" href="{% url 'quotes:generate_pdf' quote.id %}" target="_blank">
                         <i class="bi bi-file-earmark-pdf"></i>
                     </a>
                     
@@ -60,6 +60,15 @@
                     <a class="delete-option" href="{% url 'quotes:quotes_delete' quote.id %}">
                         <i class="bi bi-trash"></i>
                     </a>
+                    {% if quote.client.email %}
+                    <a class="send-email-option" href="{% url 'quotes:confirm_email' quote.id %}">
+                        <i class="bi bi-envelope"></i>
+                        </a>
+                    {% else %}
+                    <a class="send-email-option" href="{% url 'clients:client_update' quote.client.id message="falta email" %}">
+                        <i class="bi bi-envelope"></i>
+                    </a>
+                    {% endif %}
                 
                 
             </td>

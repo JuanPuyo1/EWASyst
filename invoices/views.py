@@ -3,12 +3,14 @@ from django.views import View
 from .models import Invoice
 from .forms import InvoiceForm
 from django.db.models import QuerySet
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from django.http import HttpResponse, HttpResponseRedirect
 # Create your views here.
 
 #Generar PDF
@@ -26,7 +28,10 @@ class InvoicesListView(LoginRequiredMixin, View):
 
         # Calculate restante for each invoice and add it to the context
         for invoice in invoices:
-            invoice.restante = invoice.invoice_total - invoice.invoice_balance
+            # Handle None values for invoice_total and invoice_balance
+            total = invoice.invoice_total or 0
+            balance = invoice.invoice_balance or 0
+            invoice.restante = total - balance
 
         context = { 
             'invoices': invoices,
@@ -70,17 +75,19 @@ class InvoicesDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['restante'] = context['invoice'].invoice_total - context['invoice'].invoice_balance
+        # Handle None values for invoice_total and invoice_balance
+        total = context['invoice'].invoice_total or 0
+        balance = context['invoice'].invoice_balance or 0
+        context['restante'] = total - balance
         return context
-
-
 
 
 class InvoicesUpdate(LoginRequiredMixin, UpdateView):
     model = Invoice
-    template_name = 'invoices/invoices_update.html'
+    template_name = 'invoices/invoices_create.html'
     context_object_name = 'invoice'
     form_class = InvoiceForm
+    success_url = reverse_lazy('invoices:invoices_list')
 
 @login_required
 def generate_pdf_item(request, invoice_id):
@@ -148,9 +155,10 @@ def generate_pdf_item(request, invoice_id):
             y_position = 750  # Reset to top of new page
     
     # Draw the value, qty, and abono (aligned with first item)
-    p.drawString(300, start_y, f"COP {invoice.invoice_total:,.0f}")
+    total = invoice.invoice_total or 0
+    p.drawString(300, start_y, f"COP {total:,.0f}")
     p.drawString(400, start_y, "1")
-    p.drawString(480, start_y, f"COP {invoice.invoice_total:,.0f}")
+    p.drawString(480, start_y, f"COP {total:,.0f}")
     
     # Adjust y_position for the total section
     y_position -= 20
@@ -163,7 +171,7 @@ def generate_pdf_item(request, invoice_id):
     p.rect(50, y_position, 500, row_height, fill=True)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(400, y_position + 5, "TOTAL")
-    p.drawString(480, y_position + 5, f"COP {invoice.invoice_total:,.0f}")
+    p.drawString(480, y_position + 5, f"COP {total:,.0f}")
     
     # Abono row
     y_position -= row_height
@@ -171,7 +179,8 @@ def generate_pdf_item(request, invoice_id):
     p.rect(50, y_position, 500, row_height, fill=True)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(400, y_position + 5, "ABONO")
-    p.drawString(480, y_position + 5, f"COP {invoice.invoice_balance:,.0f}")
+    balance = invoice.invoice_balance or 0
+    p.drawString(480, y_position + 5, f"COP {balance:,.0f}")
     
     # Restante row
     y_position -= row_height
@@ -179,7 +188,7 @@ def generate_pdf_item(request, invoice_id):
     p.rect(50, y_position, 500, row_height, fill=True)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(400, y_position + 5, "RESTANTE")
-    p.drawString(480, y_position + 5, f"COP {invoice.invoice_total - invoice.invoice_balance:,.0f}")
+    p.drawString(480, y_position + 5, f"COP {total - balance:,.0f}")
     
     # Notes section
     y_position -= 40
@@ -224,7 +233,62 @@ def generate_pdf_item(request, invoice_id):
     response["Content-Disposition"] = "inline; filename={}".format(f"factura_{invoice.id}.pdf")
     return response
 
+class InvoiceConfirmEmailView(LoginRequiredMixin, View):
+    template_name = 'invoices/invoice_confirm_email.html'
+    success_url = reverse_lazy('invoices:invoices_list')
+    def get(self, request, *args, **kwargs):
+        invoice = Invoice.objects.get(id=kwargs['invoice_id'])
+        return render(request, self.template_name, {'invoice': invoice})
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            invoice = Invoice.objects.get(id=kwargs['invoice_id'])
+            send_email(request, invoice.id)
+            messages.success(request, 'Factura enviada correctamente')
+            return redirect(self.success_url)
+        except Exception as e:
+            messages.error(request, f"Error: {e}")
+            return HttpResponse(f"Error: {e}")
 
-
+def send_email(request, invoice_id):
+    invoice = Invoice.objects.get(id=invoice_id)
+    subject = f"Factura {invoice.invoice_number} EWA JOYERÍA"
+    message_body = f"Buenas tardes, segun lo solicitado, la factura {invoice.invoice_number} ha sido generada"
+    from_email = settings.EMAIL_HOST_USER
+    
+    if subject and message_body and from_email and invoice.client.email:
+        try:
+            # Create EmailMessage object
+            email = EmailMessage(
+                subject=subject,
+                body=message_body,
+                from_email=from_email,
+                to=[invoice.client.email]
+            )
+            
+            # Generate PDF and attach it
+            pdf_response = generate_pdf_item(request, invoice_id)
+            pdf_content = b''.join(pdf_response.streaming_content)
+            
+            email.attach(
+                filename=f"factura_{invoice.invoice_number}.pdf",
+                content=pdf_content,
+                mimetype='application/pdf'
+            )
+            
+            # Send the email
+            email.send()
+            invoice.email_sent = True
+            invoice.save()
+            print("Email sent successfully")
+            return HttpResponseRedirect(reverse('invoices:invoices_list'))
+        except BadHeaderError:
+            print("Invalid header found.")
+            return HttpResponse("Invalid header found.")
+        except Exception as e:
+            print(f"Error sending email: {e}")
+            return HttpResponse(f"Error sending email: {e}")
+    else:
+        return HttpResponse("Make sure all fields are entered and valid.")
 
 
