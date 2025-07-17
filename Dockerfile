@@ -26,8 +26,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
  
 # Expose the Django port
+# Expose the Django port
 EXPOSE 8000
- 
+EXPOSE 8080
 # Start the application using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "EWAsyst.wsgi:application"]
- 
