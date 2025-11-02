@@ -11,14 +11,23 @@ services:
      - postgres_data:/var/lib/postgresql/data
    env_file:
      - .env
+   networks:
+      - ewasyst_network
+   healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
  
  django-web:
-   build: .
+   image: juanpuyo/ewasys:0.1.4
    container_name: django-docker
+   command: gunicorn --bind 0.0.0.0:8000 --workers 3 EWAsyst.wsgi:application
    ports:
-     - "8001:800"
+     - "8001:8000"
    depends_on:
-     - db
+     - db:
+       condition: service_healthy
    environment:
      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
      DEBUG: ${DEBUG}
@@ -32,5 +41,11 @@ services:
      DATABASE_PORT: ${DATABASE_PORT}
    env_file:
      - .env
+   networks:
+      - ewasyst_network
 volumes:
    postgres_data:
+networks:
+  ewasyst_network:
+    name: ewasyst_network
+    driver: bridge
