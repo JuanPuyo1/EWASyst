@@ -31,6 +31,8 @@ class Invoice(models.Model):
     observation = models.TextField(null=True, blank=True)
     
     invoice_quantity = models.IntegerField(null=True, blank=True)
+    invoice_discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    invoice_discount_description = models.CharField(max_length=100, null=True, blank=True)
     
     invoice_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     invoice_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
