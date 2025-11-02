@@ -154,9 +154,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 USE_THOUSAND_SEPARATOR = True
 LANGUAGE_CODE = 'es-co'
 
-CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE")
+CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE", "False").lower() == "true"
 
-SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE")
+SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "False").lower() == "true"
+
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 
 # Email Configuration
