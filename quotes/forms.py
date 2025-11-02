@@ -2,7 +2,7 @@ from django import forms
 from .models import Quote
 from dal_select2.widgets import ModelSelect2
 from clients.models import Client
-
+from django.utils import timezone
 class QuoteForm(forms.ModelForm):
     class Meta:
         model = Quote
@@ -40,6 +40,12 @@ class QuoteForm(forms.ModelForm):
             'quote_discount': forms.NumberInput(attrs={'type': 'number', 'localize': True}),
             'quote_discount_description': forms.Textarea(attrs={'rows': 4}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        time_now = timezone.now().date()
+        time_now = time_now.strftime('%Y-%m-%d')
+        self.fields['quote_date'].initial = time_now 
 
 
 
