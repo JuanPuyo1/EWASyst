@@ -10,6 +10,8 @@ class LoginModifiedView(View):
     form_class = LoginForm
     template_name = 'accounts/login.html'
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('dashboard:dashboard')
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
 

@@ -6,6 +6,12 @@
     margin-right: auto;
 }
 
+h1{
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
 .login-form{
     margin-top: 20px;
     margin-left: auto;

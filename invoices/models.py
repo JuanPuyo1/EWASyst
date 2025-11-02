@@ -13,7 +13,7 @@ class Invoice(models.Model):
         # Format: EWA001, EWA002, etc.
         return f'EWA_INV{next_number:03d}'
 
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
     invoice_number = models.CharField(max_length=100, null=True, blank=True, default=generate_invoice_number)
     
     
