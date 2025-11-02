@@ -13,7 +13,7 @@ class Invoice(models.Model):
         # Format: EWA001, EWA002, etc.
         return f'EWA_INV{next_number:03d}'
 
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
     invoice_number = models.CharField(max_length=100, null=True, blank=True, default=generate_invoice_number)
     
     
@@ -31,6 +31,8 @@ class Invoice(models.Model):
     observation = models.TextField(null=True, blank=True)
     
     invoice_quantity = models.IntegerField(null=True, blank=True)
+    invoice_discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    invoice_discount_description = models.CharField(max_length=100, null=True, blank=True)
     
     invoice_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     invoice_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

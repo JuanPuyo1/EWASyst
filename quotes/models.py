@@ -39,7 +39,7 @@ class Quote(models.Model):
     quote_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     quote_description = models.TextField(null=True, blank=True)
     quote_additional_notes = models.TextField(null=True, blank=True)
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
 
 
     quote_discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

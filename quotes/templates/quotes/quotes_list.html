@@ -43,29 +43,28 @@
             <td>{{ quote.quote_product_type }}</td>
             <td>{{ quote.quote_total|floatformat:0 }}</td>
             <td>
-                
-                    <a class="observation-option" href="{% url 'quotes:quotes_detail' quote.id %}">
+                    <a class="observation-option" href="{% url 'quotes:quotes_detail' quote.id %}" data-tooltip="Ver detalle">
                         <i class="bi bi-eye"></i>
                     </a>
-                    <a class="generate-option" href="{% url 'quotes:generate_pdf' quote.id %}" target="_blank">
+                    <a class="generate-option" href="{% url 'quotes:generate_pdf' quote.id %}" target="_blank" data-tooltip="Generar PDF">
                         <i class="bi bi-file-earmark-pdf"></i>
                     </a>
                     
-                    <a class="create-invoice-option" href="{% url 'quotes:create_invoice' quote.id %}">
+                    <a class="create-invoice-option" href="{% url 'quotes:create_invoice' quote.id %}" data-tooltip="Crear factura ">
                         <i class="bi bi-arrow-up-right"></i>
                     </a>
-                    <a class="edit-option" href="{% url 'quotes:quotes_update' quote.id %}">
+                    <a class="edit-option" href="{% url 'quotes:quotes_update' quote.id %}" data-tooltip="Editar">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <a class="delete-option" href="{% url 'quotes:quotes_delete' quote.id %}">
+                    <a class="delete-option" href="{% url 'quotes:quotes_delete' quote.id %}" data-tooltip="Eliminar">
                         <i class="bi bi-trash"></i>
                     </a>
                     {% if quote.client.email %}
-                    <a class="send-email-option" href="{% url 'quotes:confirm_email' quote.id %}">
+                    <a class="send-email-option" href="{% url 'quotes:confirm_email' quote.id %}" data-tooltip="Enviar correo electrónico">
                         <i class="bi bi-envelope"></i>
                         </a>
                     {% else %}
-                    <a class="send-email-option" href="{% url 'clients:client_update' quote.client.id message="falta email" %}">
+                    <a class="send-email-option" href="{% url 'clients:client_update' quote.client.id message="falta email" %}" data-tooltip="Enviar correo electrónico">
                         <i class="bi bi-envelope"></i>
                     </a>
                     {% endif %}

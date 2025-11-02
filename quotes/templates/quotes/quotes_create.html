@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 <title>Crear Cotización</title>
 {% endblock %}
@@ -33,7 +33,7 @@
     <div class="form-group">
         {{form.client.label}}
         {{form.client}}
-        <a href="{% url 'clients:clients_create' 'true' %}" class="btn btn-primary">Crear cliente no existente</a>
+        <a href="{% url 'clients:clients_create' %}?next={% url 'quotes:quotes_create' %}" class="btn btn-primary">Crear cliente no existente</a>
     </div>
 
     <div class="form-group">
@@ -105,14 +105,12 @@
 </form>
 {% endblock %}
 
+{% block extra_css %}
+    {{ form.media.css }}
+    <link rel="stylesheet" href="{% static 'quotes/css/quote.css' %}">
+{% endblock extra_css %}
+
 {% block extra_scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var discountCheckbox = document.getElementById('quote_discount');
-        var discountFields = document.getElementById('discount_fields');
-        discountCheckbox.addEventListener('change', function() {
-            discountFields.style.display = this.checked ? 'block' : 'none';
-        });
-    });
-</script>
-{% endblock %}
+    {{ form.media.js }}
+    <script src="{% static 'quotes/js/quote.js' %}"></script>
+{% endblock extra_scripts %}

@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 <title>Crear Factura por Item</title>
 {% endblock %}
 
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'invoices/css/invoices.css' %}">
+    {{ form.media.css }}
+{% endblock extra_css %}
 {% block breadcrumb %}
 <nav aria-label="breadcrumb">
     <ul>
@@ -18,7 +23,68 @@
 <h1>Crear Factura</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div class="form-group">
+        {{form.client.label}}
+        {{form.client}}
+    </div>
+    <div class="form-group">
+        {{form.invoice_number.label}}
+        {{form.invoice_number}}
+    </div>
+    <div class="form-group">
+        {{form.invoice_date.label}}
+        {{form.invoice_date}}
+    </div>
+    <div class="form-group">
+        {{form.invoice_type.label}}
+        {{form.invoice_type}}
+    </div>
+    <div class="form-group">
+        {{form.invoice_status.label}}
+        {{form.invoice_status}}
+    </div>
+    <div class="form-group">
+        {{form.observation.label}}
+        {{form.observation}}
+    </div>
+    <div class="form-group">
+        {{form.invoice_quantity.label}}
+        {{form.invoice_quantity}}
+    </div>
+    <div class="form-group">
+        {{form.additional_notes.label}}
+        {{form.additional_notes}}
+    </div>
+    <div class="form-group">
+        {{form.invoice_total.label}}
+        {{form.invoice_total}}
+    </div>
+    <div class="form-group">
+      <input type="checkbox" name="invoice_discount" id="invoice_discount">
+      <label for="invoice_discount">Se aplica un descuento a la factura?</label>
+      <span class="sub-label" style="font-size: 14px; color: #6c757d;">E.j: Descuento por primera compra, etc.</span>
+  </div>
+
+  <div class="discount_fields" id="discount_fields" style="display: none;">
+      <div class="form-group">
+          {{form.invoice_discount.label}}
+          {{form.invoice_discount}}
+      </div>
+      <div class="form-group">
+          {{form.invoice_discount_description.label}}
+          {{form.invoice_discount_description}}
+      </div>
+  </div>
+    <div class="form-group">
+        {{form.invoice_balance.label}}
+        {{form.invoice_balance}}
+    </div>
+
     <button type="submit">Crear</button>
 </form>
 {% endblock %}
+
+{% block extra_scripts %}
+    {{ form.media.js }}
+    <script src="{% static 'invoices/js/invoices.js' %}"></script>
+{% endblock extra_scripts %}

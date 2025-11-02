@@ -103,7 +103,7 @@ def generate_pdf_item(request, invoice_id):
     p.setFont("Helvetica", 10)
     
     # Draw logo
-    logo_path = os.path.join(BASE_DIR, 'invoices', 'static', 'invoices', 'logo.png') 
+    logo_path = os.path.join(BASE_DIR, 'invoices', 'static', 'invoices', 'img', 'logo.png') 
     p.drawImage(logo_path, 250, 700, width=100, height=100)
     
     # Draw company name
@@ -154,11 +154,30 @@ def generate_pdf_item(request, invoice_id):
             p.setFont("Helvetica", 10)
             y_position = 750  # Reset to top of new page
     
-    # Draw the value, qty, and abono (aligned with first item)
+    # Draw the value, qty, and total (aligned with first item)
     total = invoice.invoice_total or 0
     p.drawString(300, start_y, f"COP {total:,.0f}")
     p.drawString(400, start_y, "1")
     p.drawString(480, start_y, f"COP {total:,.0f}")
+    
+    # Add discount row if discount exists
+    discount = invoice.invoice_discount or 0
+    discount_description = invoice.invoice_discount_description or "Descuento"
+    
+    if discount > 0:
+        y_position -= 20
+        discount_start_y = y_position
+        
+        # Draw discount description (with word wrap if needed)
+        discount_lines = simpleSplit(discount_description, p._fontname, p._fontsize, 220)
+        for line in discount_lines:
+            p.drawString(60, y_position, line)
+            y_position -= 15
+        
+        # Align discount value, qty, and total with description start
+        p.drawString(300, discount_start_y, f"COP -{discount:,.0f}")
+        p.drawString(400, discount_start_y, "1")
+        p.drawString(480, discount_start_y, f"COP -{discount:,.0f}")
     
     # Adjust y_position for the total section
     y_position -= 20
@@ -182,13 +201,14 @@ def generate_pdf_item(request, invoice_id):
     balance = invoice.invoice_balance or 0
     p.drawString(480, y_position + 5, f"COP {balance:,.0f}")
     
-    # Restante row
+    # Restante row (total - discount - balance)
     y_position -= row_height
     p.setFillColorRGB(0.9, 0.9, 0.9)
     p.rect(50, y_position, 500, row_height, fill=True)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(400, y_position + 5, "RESTANTE")
-    p.drawString(480, y_position + 5, f"COP {total - balance:,.0f}")
+    restante = total - discount - balance
+    p.drawString(480, y_position + 5, f"COP {restante:,.0f}")
     
     # Notes section
     y_position -= 40
@@ -219,7 +239,7 @@ def generate_pdf_item(request, invoice_id):
     p.drawString(450, y_position, "GRACIAS")
     
     # Draw signature
-    sign_path = os.path.join(BASE_DIR, 'quotes', 'static', 'quotes', 'sign.jpg')
+    sign_path = os.path.join(BASE_DIR, 'invoices', 'static', 'invoices', 'img', 'sign.jpg')
     p.drawImage(sign_path, 400, y_position - 100, width=150, height=80)  # Adjust width/height as needed
     
     # Close the PDF object

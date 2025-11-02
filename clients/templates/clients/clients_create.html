@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     Anadir Cliente
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'clients/css/clients.css' %}">
 {% endblock %}
 
 {% block breadcrumb %}
