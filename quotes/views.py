@@ -160,8 +160,20 @@ def generate_pdf(request, quote_id):
     p.drawString(400, y_position + 5, "TOTAL")
     p.drawString(480, y_position + 5, f"COP {quote.quote_total:,.0f}")
     
+    # Price volatility disclaimer
+    y_position -= 20
+    p.setFont("Helvetica", 8)
+    p.setFillColorRGB(0.5, 0.5, 0.5)  # Gray color for disclaimer
+    volatility_text = "Nota: El valor de la cotización puede variar debido a la volatilidad del precio del oro"
+    volatility_lines = simpleSplit(volatility_text, p._fontname, p._fontsize, 500)
+    for line in volatility_lines:
+        p.drawString(50, y_position, line)
+        y_position -= 12
+    p.setFillColorRGB(0, 0, 0)  # Back to black
+    p.setFont("Helvetica", 10)  # Restore normal font
+    
     # Notes section
-    y_position -= 40
+    y_position -= 15
     p.drawString(50, y_position, "Notas:")
     y_position -= 20  # Move down for the first note line
 
@@ -189,6 +201,8 @@ def generate_pdf(request, quote_id):
     p.drawString(50, y_position - 110, "Para más información puede")
     p.drawString(50, y_position - 125, "contactarnos www.ewajoyeria.com")
     
+    
+
     # GRACIAS and signature (right side)
     p.drawString(450, y_position, "GRACIAS")
     
