@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'inventories',
     'invoices',
     'quotes',
+    'dal',
+    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

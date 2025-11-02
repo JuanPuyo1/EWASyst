@@ -33,7 +33,7 @@ class QuoteCreateView(LoginRequiredMixin, CreateView):
     form_class = QuoteForm
     template_name = 'quotes/quotes_create.html'
     success_url = reverse_lazy('quotes:quotes_list')
-
+    
 class QuoteDetailView(LoginRequiredMixin, DetailView):
     model = Quote
     template_name = 'quotes/quotes_detail.html'
@@ -70,7 +70,7 @@ def generate_pdf(request, quote_id):
     p.setFont("Helvetica", 10)
     
     # Draw logo
-    logo_path = os.path.join(BASE_DIR, 'quotes', 'static', 'quotes', 'logo.png')
+    logo_path = os.path.join(BASE_DIR, 'quotes', 'static', 'quotes', 'img', 'logo.png') 
     p.drawImage(logo_path, 250, 700, width=100, height=100)
     
     # Draw company name
@@ -193,7 +193,7 @@ def generate_pdf(request, quote_id):
     p.drawString(450, y_position, "GRACIAS")
     
     # Draw signature
-    sign_path = os.path.join(BASE_DIR, 'quotes', 'static', 'quotes', 'sign.jpg')
+    sign_path = os.path.join(BASE_DIR, 'quotes', 'static', 'quotes', 'img', 'sign.jpg')
     p.drawImage(sign_path, 400, y_position - 100, width=150, height=80)  # Adjust width/height as needed
     
     # Close the PDF object
